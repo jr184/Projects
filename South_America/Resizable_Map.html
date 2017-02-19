@@ -1,0 +1,757 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Resizable Map</title>
+<link rel="shortcut icon" href="Images/Website_Symbol.png" type="image/x-icon"/>
+
+<script>
+//***************************************************************************
+// Web-based mapping solution 
+//
+// To change the map layers: 
+// 1. add to "ItemsToLoad" below
+// 2. change the bounds in StartMap()
+//***************************************************************************
+</script>
+
+<script src="Includes/jquery-2.1.0.js"></script>
+
+<script src="Includes/CMUtilities.js"></script>
+<script src="Includes/CanvasMap.js"></script>
+<script src="Includes/CMScene.js"></script>
+<script src="Includes/CMDialog.js"></script>
+<script src="Includes/CMView.js"></script>
+<script src="Includes/CMLayer.js"></script>
+<script src="Includes/CMTile.js"></script>
+<script src="Includes/CMLayerGeoJSON.js"></script>
+<script src="Includes/CMLayerPyramid.js"></script>
+<script src="Includes/CMLayerPyramidOpenFormat.js"></script>
+<script src="Includes/CMProjector.js"></script>
+<script src="Includes/CMProjectorGoogleMaps.js"></script>
+<script type="text/javascript" src="js/jscharts.js"></script>
+
+<link href="css/Assignment7_Styles.css" rel="stylesheet" type="text/css">
+<link href="Includes/CanvasMap.css" rel="stylesheet" type="text/css">
+
+<script>
+
+var TheCanvasMap=null;
+
+//****************************************************************
+// Functions to setup the map
+//****************************************************************
+
+/**
+* Initialize the map for use.
+* Called after the specified information has loaded.
+*/
+function init()
+{
+	TheCanvasMap=new CanvasMap();
+	
+	// setup the folder that contains images for the icons in CanvasMap
+	TheCanvasMap.SetImageFolder("Images/");
+	
+	TheCanvasMap.SetElement(CanvasMap.MAP_HEADER); // turn off the header with the map title
+	TheCanvasMap.SetElement(CanvasMap.TOOL_CONTAINER); // turn off the tool bar below the title
+	TheCanvasMap.SetElement(CanvasMap.NAVIGATION); // turn off the nagivation controls in the map 
+	TheCanvasMap.SetElement(CanvasMap.TAB_CONTAINER,null); // turn off the tab controls to the upper right of the map
+	TheCanvasMap.SetElement(CanvasMap.LAYER_LIST,null); // hide the list of layers that is below the tab controls
+	TheCanvasMap.SetElement(CanvasMap.BACKGROUND_LIST,null); // hide the background list
+	TheCanvasMap.SetElement(CanvasMap.SEARCH_PANEL,null); // hide the search panel
+	TheCanvasMap.SetElement(CanvasMap.MAP_FOOTER); // hide the map footer at the bottom of the map
+	
+	
+	// setup the projector to compute coordinates in Geographic
+	var TheProjector=new CMProjectorGoogleMaps();
+	TheProjector.SetZoomLevel(12);
+	TheCanvasMap.SetProjector(TheProjector);	
+
+	// initialize the internal variables within CanvasMap
+	TheCanvasMap.Initialize();
+	
+	var TheView=TheCanvasMap.GetView();
+		
+	//****************************************************************************
+	// Add the background layers 
+	//****************************************************************************
+	
+	var URLArray=[
+		'http://b.tile.stamen.com/terrain/{z}/{x}/{y}.jpg',
+		'http://tile.stamen.com/toner/{z}/{x}/{y}.png',
+		];
+	
+	var NameArray=[
+		'Stamen Terrain',
+		'Stamen Toner',
+	];
+	
+	var Index=2;
+	
+	for (var i=0;i<NameArray.length;i++)
+	{
+		var Layer_World=new CMLayerPyramidOpenFormat();
+		
+		TheCanvasMap.AddBackground(Layer_World);
+		
+		Layer_World.SetURL(URLArray[i],TheView); // OpenStreetMap Standard
+		Layer_World.SetName(NameArray[i]);
+	}
+
+	//Data provided by CAIT Climate Data Explorer: http://www.wri.org/resources/data-sets/cait-country-greenhouse-gas-emissions-data
+	
+	
+	//****************************************************************************
+	// Add Styles to the Geojson layers
+	//****************************************************************************	
+	var BrazilStyle={
+		"fillStyle":"rgba(159,69,45,0.6)",
+		"lineWidth":1,
+		"strokeStyle":"#532113",
+	};
+	var BrazilStyleFill={
+		"lineWidth":2,
+		"strokeStyle":"#532113",
+		"fillStyle":"rgba(0,0,0,0)",
+	};
+	var Style1={
+		"fillStyle":"rgba(197,168,135,0.6)",
+		"lineWidth":1,
+		"strokeStyle":"#785b3a",
+	};
+	var Style1Fill={
+		"lineWidth":2,
+		"strokeStyle":"#564129",
+		"fillStyle":"rgba(0,0,0,0)",
+	};
+	var Style2={
+		"fillStyle":"rgba(61,72,41,0.6)",
+		"lineWidth":2,
+		"strokeStyle":"#607141",
+	};
+	var Style2Fill={
+		"lineWidth":2,
+		"strokeStyle":"#003300",
+		"fillStyle":"rgba(0,0,0,0)",
+	};
+	var Style3={
+		"fillStyle":"rgba(141,86,68,0.6)",
+		"lineWidth":1,
+		"strokeStyle":"#8a5442",
+	};
+	var Style3Fill={
+		"lineWidth":2,
+		"strokeStyle":"#673f32",
+		"fillStyle":"rgba(0,0,0,0)",
+	};	
+	var Style4={
+		"fillStyle":"rgba(92,56,34,0.6)",
+		"lineWidth":1,
+		"strokeStyle":"#955b37",
+	};
+	var Style4Fill={
+		"lineWidth":2,
+		"strokeStyle":"#704429",
+		"fillStyle":"rgba(0,0,0,0)",
+	};
+	var Style5={
+		"fillStyle":"rgba(150,142,100,0.6)",
+		"lineWidth":1,
+		"strokeStyle":"#999166",
+	};
+	var Style5Fill={
+		"lineWidth":2,
+		"strokeStyle":"#4d4933",
+		"fillStyle":"rgba(0,0,0,0)",
+	};
+	var Style6={
+		"fillStyle":"rgba(141,86,68,0.6)",
+		"lineWidth":1,
+		"strokeStyle":"#913921",
+	};	
+	var Style6Fill={
+		"lineWidth":2,
+		"strokeStyle":"#682918",
+		"fillStyle":"rgba(0,0,0,0)",
+	};	
+	var Style7={
+		"lineWidth":1,
+		"strokeStyle":"rgba(153, 230, 255,0.9)",
+	};
+
+	//****************************************************************************
+	// Add a GeoJSON Polygon layer
+	//****************************************************************************
+	var SA_Rivers=new CMLayerGeoJSON();
+	SA_Rivers.SetName("South America Rivers");
+	SA_Rivers.SetHTMLAttribute("HTML");
+	SA_Rivers.SetURL("GISData/South_America_Rivers.js",TheCanvasMap.GetView(),false);	
+	SA_Rivers.SetStyle(Style7); // Style1
+	TheCanvasMap.AddLayer(SA_Rivers);
+	
+	var Argentina=new CMLayerGeoJSON();
+	Argentina.SetName("Argentina");
+	Argentina.SetHTMLAttribute("HTML");
+	Argentina.SetURL("GISData/Argentina.js",TheCanvasMap.GetView(),false);	
+	Argentina.SetStyle(Style1); // Style1
+	Argentina.SetProperty(CMLayer.MOUSE_OVER_STYLE,Style1Fill);
+	TheCanvasMap.AddLayer(Argentina);
+
+	var Brazil=new CMLayerGeoJSON();
+	Brazil.SetName("Brazil");
+	Brazil.SetHTMLAttribute("HTML");	
+	Brazil.SetURL("GISData/Brazil.js",TheCanvasMap.GetView(),false);	
+	Brazil.SetStyle(BrazilStyle); // BrazilStyle
+	Brazil.SetProperty(CMLayer.MOUSE_OVER_STYLE,BrazilStyleFill);	
+	TheCanvasMap.AddLayer(Brazil);
+	
+	var Bolivia=new CMLayerGeoJSON();
+	Bolivia.SetName("Bolivia");
+	Bolivia.SetHTMLAttribute("HTML");	
+	Bolivia.SetURL("GISData/Bolivia.js",TheCanvasMap.GetView(),false);	
+	Bolivia.SetStyle(Style2); // Style2
+	Bolivia.SetProperty(CMLayer.MOUSE_OVER_STYLE,Style2Fill);
+	TheCanvasMap.AddLayer(Bolivia);
+	
+	var Chile=new CMLayerGeoJSON();
+	Chile.SetName("Chile");
+	Chile.SetHTMLAttribute("HTML");
+	Chile.SetURL("GISData/Chile.js",TheCanvasMap.GetView(),false);
+	Chile.SetStyle(Style3); // Style3
+	Chile.SetProperty(CMLayer.MOUSE_OVER_STYLE,Style3Fill);
+	TheCanvasMap.AddLayer(Chile);
+	
+	var Columbia=new CMLayerGeoJSON();
+	Columbia.SetName("Columbia");
+	Columbia.SetHTMLAttribute("HTML");
+	Columbia.SetURL("GISData/Columbia.js",TheCanvasMap.GetView(),false);
+	Columbia.SetStyle(Style3); // Style3
+	Columbia.SetProperty(CMLayer.MOUSE_OVER_STYLE,Style3Fill);
+	TheCanvasMap.AddLayer(Columbia);
+	
+	var Ecuador=new CMLayerGeoJSON();
+	Ecuador.SetName("Ecuador");
+	Ecuador.SetHTMLAttribute("HTML");
+	Ecuador.SetURL("GISData/Ecuador.js",TheCanvasMap.GetView(),false);
+	Ecuador.SetStyle(Style4); // Style4
+	Ecuador.SetProperty(CMLayer.MOUSE_OVER_STYLE,Style4Fill);
+	TheCanvasMap.AddLayer(Ecuador);
+	
+	var Guyana=new CMLayerGeoJSON();
+	Guyana.SetName("Guyana");
+	Guyana.SetHTMLAttribute("HTML");
+	Guyana.SetURL("GISData/Guyana.js",TheCanvasMap.GetView(),false);
+	Guyana.SetStyle(Style4); // Style4
+	Guyana.SetProperty(CMLayer.MOUSE_OVER_STYLE,Style4Fill);
+	TheCanvasMap.AddLayer(Guyana);
+	
+	var Guyane=new CMLayerGeoJSON();
+	Guyane.SetName("Guyane");
+	Guyane.SetHTMLAttribute("HTML");
+	Guyane.SetURL("GISData/Guayne.js",TheCanvasMap.GetView(),false);
+	Guyane.SetStyle(Style5); // Style5
+	Guyane.SetProperty(CMLayer.MOUSE_OVER_STYLE,Style5Fill);
+	TheCanvasMap.AddLayer(Guyane);
+	
+	var Paraguay=new CMLayerGeoJSON();
+	Paraguay.SetName("Paraguay");
+	Paraguay.SetHTMLAttribute("HTML");
+	Paraguay.SetURL("GISData/Paraguay.js",TheCanvasMap.GetView(),false);
+	Paraguay.SetStyle(Style4); // Style4
+	Paraguay.SetProperty(CMLayer.MOUSE_OVER_STYLE,Style4Fill);
+	TheCanvasMap.AddLayer(Paraguay);
+	
+	var Peru=new CMLayerGeoJSON();
+	Peru.SetName("Peru");
+	Peru.SetHTMLAttribute("HTML");
+	Peru.SetURL("GISData/Peru.js",TheCanvasMap.GetView(),false);
+	Peru.SetStyle(Style5); // Style5
+	Peru.SetProperty(CMLayer.MOUSE_OVER_STYLE,Style5Fill);
+	TheCanvasMap.AddLayer(Peru);
+	
+	var Suriname=new CMLayerGeoJSON();
+	Suriname.SetName("Suriname");
+	Suriname.SetHTMLAttribute("HTML");
+	Suriname.SetURL("GISData/Suriname.js",TheCanvasMap.GetView(),false);
+	Suriname.SetStyle(Style1); // Style1
+	Suriname.SetProperty(CMLayer.MOUSE_OVER_STYLE,Style1Fill);
+	TheCanvasMap.AddLayer(Suriname);
+	
+	var Uruguay=new CMLayerGeoJSON();
+	Uruguay.SetName("Uruguay");
+	Uruguay.SetHTMLAttribute("HTML");
+	Uruguay.SetURL("GISData/Uruguay.js",TheCanvasMap.GetView(),false);
+	Uruguay.SetStyle(Style2); // Style2
+	Uruguay.SetProperty(CMLayer.MOUSE_OVER_STYLE,Style2Fill);
+	TheCanvasMap.AddLayer(Uruguay);
+	
+	var Venezuela=new CMLayerGeoJSON();
+	Venezuela.SetName("Venezuela");
+	Venezuela.SetHTMLAttribute("HTML");
+	Venezuela.SetURL("GISData/Venezuela.js",TheCanvasMap.GetView(),false);
+	Venezuela.SetStyle(Style2); // Style2
+	Venezuela.SetProperty(CMLayer.MOUSE_OVER_STYLE,Style2Fill);
+	TheCanvasMap.AddLayer(Venezuela);
+	
+	//******************************************************
+	//This is where each country has an 
+	//******************************************************
+	
+	//var TheChartCanvas=document.getElementById("ResultsSection"); // canvas
+
+	Argentina.MouseDown=function(TheView,RefX,RefY) 
+	{	
+		var Used=false;
+		
+		if (this.In(TheView,RefX,RefY)!=-1)
+		{
+			var TheChartCanvas = document.getElementById("ArgentinaContent");
+			var TheParent=document.getElementById("ResultsSection");
+			
+			TheChartCanvas.style.display="block";
+			
+			while (TheParent.childNodes.length>0)
+			{
+				TheParent.removeChild(TheParent.childNodes[0]);
+			}
+			
+			TheParent.appendChild(TheChartCanvas);	
+			
+			GetChartArgentina();
+			
+			Used=true;
+		}
+		return(Used);
+	};	
+
+	Brazil.MouseDown=function(TheView,RefX,RefY) 
+	{			
+		var Used=false;
+		
+		if (this.In(TheView,RefX,RefY)!=-1)
+		{
+			var TheChartCanvas = document.getElementById("BrazilContent");
+			var TheParent=document.getElementById("ResultsSection");
+			
+			TheChartCanvas.style.display="block";
+			
+			while (TheParent.childNodes.length>0)
+			{
+				TheParent.removeChild(TheParent.childNodes[0]);
+			}
+			
+			TheParent.appendChild(TheChartCanvas);	
+			
+			GetChartBrazil();
+			
+			Used=true;
+		}
+		return(Used);
+	};
+
+	Bolivia.MouseDown=function(TheView,RefX,RefY) 
+	{	
+		var Used=false;
+		
+		if (this.In(TheView,RefX,RefY)!=-1)
+		{
+			var TheChartCanvas = document.getElementById("BoliviaContent");
+			var TheParent=document.getElementById("ResultsSection");
+			
+			TheChartCanvas.style.display="block";
+			
+			while (TheParent.childNodes.length>0)
+			{
+				TheParent.removeChild(TheParent.childNodes[0]);
+			}
+			
+			TheParent.appendChild(TheChartCanvas);	
+			
+			GetChartBolivia();
+			
+			Used=true;
+		}
+		return(Used);
+	};	
+	
+	Chile.MouseDown=function(TheView,RefX,RefY) 
+	{	
+		var Used=false;
+		
+		if (this.In(TheView,RefX,RefY)!=-1)
+		{
+			var TheChartCanvas = document.getElementById("ChileContent");
+			var TheParent=document.getElementById("ResultsSection");
+			
+			TheChartCanvas.style.display="block";
+			
+			while (TheParent.childNodes.length>0)
+			{
+				TheParent.removeChild(TheParent.childNodes[0]);
+			}
+			
+			TheParent.appendChild(TheChartCanvas);	
+			
+			GetChartChile();
+			
+			Used=true;
+		}
+		return(Used);
+	};	
+	
+	Columbia.MouseDown=function(TheView,RefX,RefY) 
+	{	
+		var Used=false;
+		
+		if (this.In(TheView,RefX,RefY)!=-1)
+		{
+			var TheChartCanvas = document.getElementById("ColumbiaContent");
+			var TheParent=document.getElementById("ResultsSection");
+			
+			TheChartCanvas.style.display="block";
+			
+			while (TheParent.childNodes.length>0)
+			{
+				TheParent.removeChild(TheParent.childNodes[0]);
+			}
+			
+			TheParent.appendChild(TheChartCanvas);	
+			
+			GetChartColumbia();
+			
+			Used=true;
+		}
+		return(Used);
+	};		
+	
+	Ecuador.MouseDown=function(TheView,RefX,RefY) 
+	{	
+		var Used=false;
+		
+		if (this.In(TheView,RefX,RefY)!=-1)
+		{
+			var TheChartCanvas = document.getElementById("EcuadorContent");
+			var TheParent=document.getElementById("ResultsSection");
+			
+			TheChartCanvas.style.display="block";
+			
+			while (TheParent.childNodes.length>0)
+			{
+				TheParent.removeChild(TheParent.childNodes[0]);
+			}
+			
+			TheParent.appendChild(TheChartCanvas);	
+			
+			GetChartEcuador();
+			
+			Used=true;
+		}
+		return(Used);
+	};		
+	
+	Guyana.MouseDown=function(TheView,RefX,RefY) 
+	{	
+		var Used=false;
+		
+		if (this.In(TheView,RefX,RefY)!=-1)
+		{
+			var TheChartCanvas = document.getElementById("GuyanaContent");
+			var TheParent=document.getElementById("ResultsSection");
+			
+			TheChartCanvas.style.display="block";
+			
+			while (TheParent.childNodes.length>0)
+			{
+				TheParent.removeChild(TheParent.childNodes[0]);
+			}
+			
+			TheParent.appendChild(TheChartCanvas);	
+			
+			GetChartGuyana();
+			
+			Used=true;
+		}
+		return(Used);
+	};		
+	
+	Guyane.MouseDown=function(TheView,RefX,RefY) 
+	{	
+		var Used=false;
+		
+		if (this.In(TheView,RefX,RefY)!=-1)
+		{
+			var TheChartCanvas = document.getElementById("GuyaneContent");
+			var TheParent=document.getElementById("ResultsSection");
+			
+			TheChartCanvas.style.display="block";
+			
+			while (TheParent.childNodes.length>0)
+			{
+				TheParent.removeChild(TheParent.childNodes[0]);
+			}
+			
+			TheParent.appendChild(TheChartCanvas);	
+			
+			GetChartGuyane();
+			
+			Used=true;
+		}
+		return(Used);
+	};	
+	
+	Paraguay.MouseDown=function(TheView,RefX,RefY) 
+	{	
+		var Used=false;
+		
+		if (this.In(TheView,RefX,RefY)!=-1)
+		{
+			var TheChartCanvas = document.getElementById("ParaguayContent");
+			var TheParent=document.getElementById("ResultsSection");
+			
+			TheChartCanvas.style.display="block";
+			
+			while (TheParent.childNodes.length>0)
+			{
+				TheParent.removeChild(TheParent.childNodes[0]);
+			}
+			
+			TheParent.appendChild(TheChartCanvas);	
+			
+			GetChartParaguay();
+			
+			Used=true;
+		}
+		return(Used);
+	};	
+	
+	Peru.MouseDown=function(TheView,RefX,RefY) 
+	{	
+		var Used=false;
+		
+		if (this.In(TheView,RefX,RefY)!=-1)
+		{
+			var TheChartCanvas = document.getElementById("PeruContent");
+			var TheParent=document.getElementById("ResultsSection");
+			
+			TheChartCanvas.style.display="block";
+			
+			while (TheParent.childNodes.length>0)
+			{
+				TheParent.removeChild(TheParent.childNodes[0]);
+			}
+			
+			TheParent.appendChild(TheChartCanvas);	
+			
+			GetChartPeru();
+			
+			Used=true;
+		}
+		return(Used);
+	};	
+	
+	Suriname.MouseDown=function(TheView,RefX,RefY) 
+	{	
+		var Used=false;
+		
+		if (this.In(TheView,RefX,RefY)!=-1)
+		{
+			var TheChartCanvas = document.getElementById("SurinameContent");
+			var TheParent=document.getElementById("ResultsSection");
+			
+			TheChartCanvas.style.display="block";
+			
+			while (TheParent.childNodes.length>0)
+			{
+				TheParent.removeChild(TheParent.childNodes[0]);
+			}
+			
+			TheParent.appendChild(TheChartCanvas);	
+			
+			GetChartSuriname();
+			
+			Used=true;
+		}
+		return(Used);
+	};		
+	
+	Uruguay.MouseDown=function(TheView,RefX,RefY) 
+	{			
+		var Used=false;
+		
+		if (this.In(TheView,RefX,RefY)!=-1)
+		{
+			var TheChartCanvas = document.getElementById("UruguayContent");
+			var TheParent=document.getElementById("ResultsSection");
+			
+			TheChartCanvas.style.display="block";
+			
+			while (TheParent.childNodes.length>0)
+			{
+				TheParent.removeChild(TheParent.childNodes[0]);
+			}
+			
+			TheParent.appendChild(TheChartCanvas);	
+			
+			GetChartUruguay();
+			
+			Used=true;
+		}
+		return(Used);
+	};
+	
+	Venezuela.MouseDown=function(TheView,RefX,RefY) 
+	{	
+		var Used=false;
+		
+		if (this.In(TheView,RefX,RefY)!=-1)
+		{
+			var TheChartCanvas = document.getElementById("VenezualaContent");
+			var TheParent=document.getElementById("ResultsSection");
+			
+			TheChartCanvas.style.display="block";
+			
+			while (TheParent.childNodes.length>0)
+			{
+				TheParent.removeChild(TheParent.childNodes[0]);
+			}
+			
+			TheParent.appendChild(TheChartCanvas);	
+			
+			GetChartVenezuela();
+			
+			Used=true;
+		}
+		return(Used);
+	};
+
+
+
+
+	//Argentina.MouseDown=function(TheView,RefX,RefY) 
+	//{	
+		//var TheChartCanvas1 = document.getElementById("ArgentinaContent").innerHTML;
+		//document.getElementById("ResultsSection").innerHTML = TheChartCanvas1;	
+	//};
+		
+	//****************************************************************************
+	// start up the map and zoom to the world
+	//****************************************************************************
+	TheCanvasMap.StartMap(false);
+	//var TheBounds = 
+	//{
+	//	XMin: -500000, // left side (usually wester most edge)
+	//	XMax: 2000000, // right side (usually eastern most edge)
+	//	YMin: 3300000, // bottom side (usually southern most edge)
+	//	YMax: 5000000 // top side (usually northern most edge)
+	//}
+	//TheCanvasMap.TheView.SetMaxBounds(TheBounds);
+	TheCanvasMap.TheView.SetZoomRange(-14,-10);
+	
+	TheCanvasMap.ZoomTo(-14); // set the zoom level to fit out area of interest
+	TheCanvasMap.SetRefCenter(12000000,-34700000); // set the center of the map    [(Left OR Right),(Up OR Down)]
+	
+	TheCanvasMap.GetScene().SetSelectedBackgroundIndex(0);
+	
+	// add the resize function to the window using jQuery
+	$( window ).resize(function() {
+		TheCanvasMap.Resize();
+	});
+	
+	// call the resize function to setup the map for the first time
+	TheCanvasMap.Resize();
+}
+
+
+//**********************************************************
+// Start of HTML
+//**********************************************************
+</script>
+</head>
+
+<body onload='init()'>
+	<div id="main_container"> <!-- main container for the entire web page. -->
+		<div class="sub-container2">
+			<!-------------------------------------- top of page ------------------------------------>
+			<!-- masthead at the top of the page -->
+			<div id="masthead" style="width:100%; height:24px; margin:0 auto;"> 
+			<!-- content for masthead goes here -->
+			</div>
+
+			<!-- header for the page including an image -->
+			 <!-- Begin header -->
+			<div id="header" style="width: 960px; height: 130px; margin:0 auto;">
+				<div class = "logo">
+					<a href="index.html"><img style="opacity: 0.8;" src="Images/Mountain_Ranges.png" width="960px" height="130px" alt="Mountain Ranges"></a>     
+				</div> 
+			</div> 
+			<!-- End header -->
+
+			<!-- this is the menu bar across the web page (i.e. navigation bar) -->
+			<div class="master_main_nav">
+				<div id="main_nav2" style="width: 960px; height: 52px; margin:0 auto;">
+					<ul>
+						<li><a href="index.html">Home</a></li> <!-- Change these links to point where you desire -->
+						<li><a href="Utilities.html">Utilities</a></li>
+						<li><a href="Map_Simplest_GetURL.html">Dynamic Map</a></li>
+						<li><a class="LinkActive" href="Resizable_Map.html">Resizable Map</a></li>
+					</ul>
+				</div> <!-- end main navigation bar -->
+			</div>
+	
+			<!-------------------------------------- content ------------------------------------>
+			<!--- This is the container for the map -->
+			<div id="MapContainer_0" style='top:10; left:10;width:500px;height:500px;padding:0px;margin: 0 auto;'>
+				<div class="CountryResults" id="ResultsSection">
+					<p>Click a country for more information.</p>
+				</div>
+			</div>
+			
+			<div id="ArgentinaContent" style="display:none; margin:0 auto;"><div class='InfoContainer'><table class='TableStyles' width='300' border='0' cellspacing='2px' cellpadding='2px'><tr><td><h3 class='SAInfo'>Argentina Republic</h3></td><td><img src='Images/Argentina.JPG' alt='Argentina'/></td></tr></table><div id='graph1'>Loading graph...</div><div style='padding-left:5px; padding-bottom: 5px;'><table class='TableStyles' width='300' border='1' cellspacing='0px' cellpadding='0px'><tr><th class='thBackground1'><p class='SAInfo'><strong>Population</strong></p></th><th class='thBackground1'><p class='SAInfo'><strong>Income Group</strong></p></th></tr><tr><td class='tdBackground1'><p class='SAInfo'>40913584</p></td><td class='tdBackground1'><p class='SAInfo'>Upper Middle Income</p></td></tr></table></div></div></div>
+			<div id="BrazilContent" style="display:none; margin:0 auto;"><div class='InfoContainer'><table class='TableStyles' width='300' border='0' cellspacing='2px' cellpadding='2px'><tr><td><h3 class='SAInfo'>Federative Republic of Brazil</h3></td><td><img src='Images/Brazil.JPG' alt='Brazil'/></td></tr></table><div id='graph2'>Loading graph...</div><div style='padding-left: 5px; padding-bottom: 5px;'><table class='TableStyles' width='300' border='1' cellspacing='0px' cellpadding='0px'><tr><th class='thBackground1'><p class='SAInfo'><strong>Population</strong></p></th><th class='thBackground1'><p class='SAInfo'><strong>Income Group</strong></p></th></tr><tr><td class='tdBackground1'><p class='SAInfo'>198739269</p></td><td class='tdBackground1'><p class='SAInfo'>Upper Middle Income</p></td></tr></table></div></div></div>
+			<div id="BoliviaContent" style="display:none; margin:0 auto;"><div class='InfoContainer'><table class='TableStyles' width='300' border='0' cellspacing='2px' cellpadding='2px'><tr><td><h3 class='SAInfo'>Plurinational State of Bolivia</h3></td><td><img src='Images/Bolivia.JPG' alt='Bolivia'/></td></tr></table><div id='graph3'>Loading graph...</div><div style='padding-left: 5px; padding-bottom: 5px;'><table class='TableStyles' width='300' border='1' cellspacing='0px' cellpadding='0px'><tr><th class='thBackground1'><p class='SAInfo'><strong>Population</strong></p></th><th class='thBackground1'><p class='SAInfo'><strong>Income Group</strong></p></th></tr><tr><td class='tdBackground1'><p class='SAInfo'>9775246</p></td><td class='tdBackground1'><p class='SAInfo'> Lower Middle Income</p></td></tr></table></div></div></div>
+			<div id="ChileContent" style="display:none; margin:0 auto;"><div class='InfoContainer'><table class='TableStyles' width='300' border='0' cellspacing='2px' cellpadding='2px'><tr><td><h3 class='SAInfo'>Republic of Chile</h3></td><td><img src='Images/Chile.JPG' alt='Chile'/></td></tr></table><div id='graph4'>Loading graph...</div><div style='padding-left: 5px; padding-bottom: 5px;'><table class='TableStyles' width='300' border='1' cellspacing='0px' cellpadding='0px'><tr><th class='thBackground1'><p class='SAInfo'><strong>Population</strong></p></th><th class='thBackground1'><p class='SAInfo'><strong>Income Group</strong></p></th></tr><tr><td class='tdBackground1'><p class='SAInfo'>16601707</p></td><td class='tdBackground1'><p class='SAInfo'>Upper Middle Income</p></td></tr></table></div></div></div>
+			<div id="ColumbiaContent" style="display:none; margin:0 auto;"><div class='InfoContainer'><table class='TableStyles' width='300' border='0' cellspacing='2px' cellpadding='2px'><tr><td><h3 class='SAInfo'>Republic of Columbia</h3></td><td><img src='Images/Columbia.JPG' alt='Columbia'/></td></tr></table><div id='graph5'>Loading graph...</div><div style='padding-left: 5px; padding-bottom: 5px;'><table class='TableStyles' width='300' border='1' cellspacing='0px' cellpadding='0px'><tr><th class='thBackground1'><p class='SAInfo'><strong>Population</strong></p></th><th class='thBackground1'><p class='SAInfo'><strong>Income Group</strong></p></th></tr><tr><td class='tdBackground1'><p class='SAInfo'>45644023</p></td><td class='tdBackground1'><p class='SAInfo'>Upper Middle Income</p></td></tr></table></div></div></div>
+			<div id="EcuadorContent" style="display:none; margin:0 auto;"><div class='InfoContainer'><table class='TableStyles' width='300' border='0' cellspacing='2px' cellpadding='2px'><tr><td><h3 class='SAInfo'>Republic of Ecuador</h3></td><td><img src='Images/Ecuador.JPG' alt='Ecuador'/></td></tr></table><div id='graph6'>Loading graph...</div><div style='padding-left: 5px; padding-bottom: 5px;'><table class='TableStyles' width='300' border='1' cellspacing='0px' cellpadding='0px'><tr><th class='thBackground1'><p class='SAInfo'><strong>Population</strong></p></th><th class='thBackground1'><p class='SAInfo'><strong>Income Group</strong></p></th></tr><tr><td class='tdBackground1'><p class='SAInfo'>14573101</p></td><td class='tdBackground1'><p class='SAInfo'>Upper Middle Income</p></td></tr></table></div></div></div>
+			<div id="GuyanaContent" style="display:none; margin:0 auto;"><div class='InfoContainer'><table class='TableStyles' width='300' border='0' cellspacing='2px' cellpadding='2px'><tr><td><h3 class='SAInfo'>Co-operative Republic of Guyana</h3></td><td><img src='Images/Guyana.JPG' alt='Guyana'/></td></tr></table><div id='graph7'>Loading graph...</div><div style='padding-left: 5px; padding-bottom: 5px;'><table class='TableStyles' width='300' border='1' cellspacing='0px' cellpadding='0px'><tr><th class='thBackground1'><p class='SAInfo'><strong>Population</strong></p></th><th class='thBackground1'><p class='SAInfo'><strong>Income Group</strong></p></th></tr><tr><td class='tdBackground1'><p class='SAInfo'>772298</p></td><td class='tdBackground1'><p class='SAInfo'>Lower Middle Income</p></td></tr></table></div></div></div>
+			<div id="GuyaneContent" style="display:none; margin:0 auto;"><div class='InfoContainer'><table class='TableStyles' width='300' border='0' cellspacing='2px' cellpadding='2px'><tr><td><h3 class='SAInfo'>French Guiana</h3></td><td><img src='Images/French_Guiana.JPG' alt='French Guiana'/></td></tr></table><div id='graph8'>Loading graph...</div><div style='padding-left: 5px; padding-bottom: 5px;'><table class='TableStyles' width='300' border='1' cellspacing='0px' cellpadding='0px'><tr><th class='thBackground1'><p class='SAInfo'><strong>Population</strong></p></th><th class='thBackground1'><p class='SAInfo'><strong>Income Group</strong></p></th></tr><tr><td class='tdBackground1'><p class='SAInfo'>64057792</p></td><td class='tdBackground1'><p class='SAInfo'>High Income: OECD</p></td></tr></table></div></div></div>
+			<div id="ParaguayContent" style="display:none; margin:0 auto;"><div class='InfoContainer'><table class='TableStyles' width='300' border='0' cellspacing='2px' cellpadding='2px'><tr><td><h3 class='SAInfo'>Republic of Paraguay</h3></td><td><img src='Images/Paraguay.JPG' alt='Paraguay'/></td></tr></table><div id='graph9'>Loading graph...</div><div style='padding-left: 5px; padding-bottom: 5px;'><table class='TableStyles' width='300' border='1' cellspacing='0px' cellpadding='0px'><tr><th class='thBackground1'><p class='SAInfo'><strong>Population</strong></p></th><th class='thBackground1'><p class='SAInfo'><strong>Income Group</strong></p></th></tr><tr><td class='tdBackground1'><p class='SAInfo'> 6995655</p></td><td class='tdBackground1'><p class='SAInfo'>Lower Middle Income</p></td></tr></table></div></div></div>
+			<div id="PeruContent" style="display:none; margin:0 auto;"><div class='InfoContainer'><table class='TableStyles' width='300' border='0' cellspacing='2px' cellpadding='2px'><tr><td><h3 class='SAInfo'>Republic of Peru</h3></td><td><img src='Images/Peru.JPG' alt='Peru'/></td></tr></table><div id='graph10'>Loading graph...</div><div style='padding-left: 5px; padding-bottom: 5px;'><table class='TableStyles' width='300' border='1' cellspacing='0px' cellpadding='0px'><tr><th class='thBackground1'><p class='SAInfo'><strong>Population</strong></p></th><th class='thBackground1'><p class='SAInfo'><strong>Income Group</strong></p></th></tr><tr><td class='tdBackground1'><p class='SAInfo'>29546963</p></td><td class='tdBackground1'><p class='SAInfo'>Upper Middle Income</p></td></tr></table></div></div></div>
+			<div id="SurinameContent" style="display:none; margin:0 auto;"><div class='InfoContainer'><table class='TableStyles' width='300' border='0' cellspacing='2px' cellpadding='2px'><tr><td><h3 class='SAInfo'>Republic of Suriname</h3></td><td><img src='Images/Suriname.JPG' alt='Suriname'/></td></tr></table><div id='graph11'>Loading graph...</div><div style='padding-left: 5px; padding-bottom: 5px;'><table class='TableStyles' width='300' border='1' cellspacing='0px' cellpadding='0px'><tr><th class='thBackground1'><p class='SAInfo'><strong>Population</strong></p></th><th class='thBackground1'><p class='SAInfo'><strong>Income Group</strong></p></th></tr><tr><td class='tdBackground1'><p class='SAInfo'>481267</p></td><td class='tdBackground1'><p class='SAInfo'>Upper Middle Income</p></td></tr></table></div></div></div>
+			<div id="UruguayContent" style="display:none; margin:0 auto;"><div class='InfoContainer'><table class='TableStyles' width='300' border='0' cellspacing='2px' cellpadding='2px'><tr><td><h3 class='SAInfo'>Oriental Republic of Uruguay</h3></td><td><img src='Images/Uruguay.JPG' alt='Uruguay'/></td></tr></table><div id='graph12'>Loading graph...</div><div style='padding-left: 5px; padding-bottom: 5px;'><table class='TableStyles' width='300' border='1' cellspacing='0px' cellpadding='0px'><tr><th class='thBackground1'><p class='SAInfo'><strong>Population</strong></p></th><th class='thBackground1'><p class='SAInfo'><strong>Income Group</strong></p></th></tr><tr><td class='tdBackground1'><p class='SAInfo'> 3494382</p></td><td class='tdBackground1'><p class='SAInfo'>Upper Middle Income</p></td></tr></table></div></div></div>
+			<div id="VenezualaContent" style="display:none; margin:0 auto;"><div class='InfoContainer'><table class='TableStyles' width='300' border='0' cellspacing='2px' cellpadding='2px'><tr><td><h3 class='SAInfo'>Bolivarian Repuclic of Venezuela</h3></td><td><img src='Images/Venezuela.JPG' alt='Venezuela'/></td></tr></table><div id='graph13'>Loading graph...</div><div style='padding-left: 5px; padding-bottom: 5px;'><table class='TableStyles' width='300' border='1' cellspacing='0px' cellpadding='0px'><tr><th class='thBackground1'><p class='SAInfo'><strong>Population</strong></p></th><th class='thBackground1'><p class='SAInfo'><strong>Income Group</strong></p></th></tr><tr><td class='tdBackground1'><p class='SAInfo'>26814843</p></td><td class='tdBackground1'><p class='SAInfo'>Upper Middle Income</p></td></tr></table></div></div></div>
+			
+			
+			<!-------------------------------------- footer ------------------------------------>
+			<!-- begin footer container -->
+			<div class="Master_Footer">
+				<div id="footer_container2">
+					<!-- This is a footer at the bottom of the page -->
+					<div id="footer2">
+						<table border="0" cellspacing="0" cellspacing="5" width="960px">
+							<tr>
+								<td style="vertical-align: middle;" width="240px" align="left" valign="top">
+									<h3 class="h3Styles">Humboldt State University</h3>
+								</td>
+								<td width="240px" align="left" valign="top">
+									<h3 class="h3Styles">Created By Joshua Rodriguez</h3>
+								</td>
+								<td width="240px" align="left" valign="top">
+									<h3 class="h3Styles">October 12<sup>th</sup> 2016</h3>
+								</td>
+								<td width="240px" align="left" valign="top">
+									<h3 class="h3Styles">Contact: jr184@humboldt.edu</h3>
+								</td>							
+							</tr>
+						</table>
+					</div> <!-- end footer -->
+				</div> <!-- end footer container -->
+			</div> <!-- end Master_Footer -->
+		</div><!-- end of sub-container -->
+	</div> <!--- main_container -->	
+	
+	<!-- This is where the charts are being called from -->
+	<script src="js/GHG_Charts.js"></script>
+	
+</body>
+</html>

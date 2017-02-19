@@ -1,0 +1,318 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Simple Map</title>
+<link rel="shortcut icon" href="Images/Website_Symbol.png" type="image/x-icon"/>
+
+<script>
+//***************************************************************************
+// CanvasMap tutorial
+//***************************************************************************
+//***************************************************************************
+// Includes
+//***************************************************************************
+</script>
+
+<script src="Includes/jquery-2.1.0.js"></script>
+
+<script src="Includes/CMUtilities.js"></script>
+<script src="Includes/CanvasMap.js"></script>
+<script src="Includes/CMScene.js"></script>
+<script src="Includes/CMDialog.js"></script>
+<script src="Includes/CMView.js"></script>
+<script src="Includes/CMLayer.js"></script>
+<script src="Includes/CMTile.js"></script>
+<script src="Includes/CMLayerGeoJSON.js"></script>
+<script src="Includes/CMLayerPyramid.js"></script>
+<script src="Includes/CMLayerPyramidOpenFormat.js"></script>
+<script src="Includes/CMProjector.js"></script>
+<script src="Includes/CMProjectorGoogleMaps.js"></script>
+
+<link href="Includes/CanvasMap.css" rel="stylesheet" type="text/css">
+<link href="css/Assignment7_Styles.css" rel="stylesheet" type="text/css">
+<script>
+
+//****************************************************************
+// Functions to control CanvasMap
+//**************************************************************** 
+// This is the one global variable and holds the CanvasMap object
+var TheCanvasMap=null;
+/**
+* Initialize the map for use.
+* Called after the specified information has loaded.
+*/
+function init()
+{
+	TheCanvasMap=new CanvasMap(); // creates the map object
+	
+	TheCanvasMap.SetImageFolder("Images/"); // lets CanvasMap know where the images are
+	
+	// setup the projector to compute coordinates in Geographic
+	var TheProjector=new CMProjectorGoogleMaps();
+	TheProjector.SetZoomLevel(12);
+	TheCanvasMap.SetProjector(TheProjector);	
+
+	TheCanvasMap.Initialize(); // sets up the view, scene, and event handlers for the map
+
+	var TheView=TheCanvasMap.GetView();
+		
+	//****************************************************************************
+	// Add the background layers 
+	//****************************************************************************
+	
+	var URLArray=[
+		//'http://c.tile.stamen.com/watercolor/{z}/{x}/{y}.jpg',
+		'http://b.tile.stamen.com/terrain/{z}/{x}/{y}.jpg',
+		'http://tile.stamen.com/toner/{z}/{x}/{y}.png',
+		//'http://c.tile.stamen.com/watercolor/{z}/{x}/{y}.png',
+		//'http://b.tiles.mapbox.com/v3/jeffmerrick.map-tnw3k3na/{z}/{x}/{y}.png'
+		];
+	
+	var NameArray=[
+		//'Stamen',
+		'Stamen Terrain',
+		'Stamen Toner',
+		//'Stamen Watercolor',
+		//'CartBD'
+	];
+	
+	var Index=2;
+	
+	for (var i=0;i<NameArray.length;i++)
+	{
+		var Layer_World=new CMLayerPyramidOpenFormat();
+		
+		TheCanvasMap.AddBackground(Layer_World);
+		
+		Layer_World.SetURL(URLArray[i],TheView); // OpenStreetMap Standard
+		Layer_World.SetName(NameArray[i]);
+	}	
+	//****************************************************************************
+	// Add Styles to the Geojson layers
+	//****************************************************************************	
+	var BrazilStyle={
+		"fillStyle":"rgba(159,69,45,0.6)",
+		"lineWidth":1,
+		"strokeStyle":"#532113",
+	};
+	var Style1={
+		"fillStyle":"rgba(197,168,135,0.6)",
+		"lineWidth":1,
+		"strokeStyle":"#785b3a",
+	};
+	var Style2={
+		"fillStyle":"rgba(61,72,41,0.6)",
+		"lineWidth":2,
+		"strokeStyle":"#607141",
+	};
+	var Style3={
+		"fillStyle":"rgba(141,86,68,0.6)",
+		"lineWidth":1,
+		"strokeStyle":"#8a5442",
+	};
+	var Style4={
+		"fillStyle":"rgba(92,56,34,0.6)",
+		"lineWidth":1,
+		"strokeStyle":"#c88e6a",
+	};
+	var Style5={
+		"fillStyle":"rgba(150,142,100,0.6)",
+		"lineWidth":1,
+		"strokeStyle":"#999166",
+	};
+	var Style6={
+		"fillStyle":"rgba(98,40,24,0.6)",
+		"lineWidth":1,
+		"strokeStyle":"#913921",
+	};	
+	//****************************************************************************
+	// Add a GeoJSON Polygon layer
+	//****************************************************************************
+	
+	var Argentina=new CMLayerGeoJSON();
+	Argentina.SetName("Argentina");
+	Argentina.SetHTMLAttribute("HTML");
+	Argentina.SetURL("GISData/Argentina.js",TheCanvasMap.GetView(),false);	
+	Argentina.SetStyle(Style1); // Style1
+	TheCanvasMap.AddLayer(Argentina);
+
+	var Brazil=new CMLayerGeoJSON();
+	Brazil.SetName("Brazil");
+	Brazil.SetHTMLAttribute("HTML");	
+	Brazil.SetURL("GISData/Brazil.js",TheCanvasMap.GetView(),false);	
+	Brazil.SetStyle(BrazilStyle); // BrazilStyle
+	TheCanvasMap.AddLayer(Brazil);
+	
+	var Bolivia=new CMLayerGeoJSON();
+	Bolivia.SetName("Bolivia");
+	Bolivia.SetHTMLAttribute("HTML");	
+	Bolivia.SetURL("GISData/Bolivia.js",TheCanvasMap.GetView(),false);	
+	Bolivia.SetStyle(Style2); // Style2
+	TheCanvasMap.AddLayer(Bolivia);
+	
+	var Chile=new CMLayerGeoJSON();
+	Chile.SetName("Chile");
+	Chile.SetHTMLAttribute("HTML");
+	Chile.SetURL("GISData/Chile.js",TheCanvasMap.GetView(),false);
+	Chile.SetStyle(Style3); // Style3
+	TheCanvasMap.AddLayer(Chile);
+	
+	var Columbia=new CMLayerGeoJSON();
+	Columbia.SetName("Columbia");
+	Columbia.SetHTMLAttribute("HTML");
+	Columbia.SetURL("GISData/Columbia.js",TheCanvasMap.GetView(),false);
+	Columbia.SetStyle(Style3); // Style3
+	TheCanvasMap.AddLayer(Columbia);
+	
+	var Ecuador=new CMLayerGeoJSON();
+	Ecuador.SetName("Ecuador");
+	Ecuador.SetHTMLAttribute("HTML");
+	Ecuador.SetURL("GISData/Ecuador.js",TheCanvasMap.GetView(),false);
+	Ecuador.SetStyle(Style4); // Style4
+	TheCanvasMap.AddLayer(Ecuador);
+	
+	var Guyana=new CMLayerGeoJSON();
+	Guyana.SetName("Guyana");
+	Guyana.SetHTMLAttribute("HTML");
+	Guyana.SetURL("GISData/Guyana.js",TheCanvasMap.GetView(),false);
+	Guyana.SetStyle(Style4); // Style4
+	TheCanvasMap.AddLayer(Guyana);
+	
+	var Guyane=new CMLayerGeoJSON();
+	Guyane.SetName("Guyane");
+	Guyane.SetHTMLAttribute("HTML");
+	Guyane.SetURL("GISData/Guayne.js",TheCanvasMap.GetView(),false);
+	Guyane.SetStyle(Style5); // Style5
+	TheCanvasMap.AddLayer(Guyane);
+	
+	var Paraguay=new CMLayerGeoJSON();
+	Paraguay.SetName("Paraguay");
+	Paraguay.SetHTMLAttribute("HTML");
+	Paraguay.SetURL("GISData/Paraguay.js",TheCanvasMap.GetView(),false);
+	Paraguay.SetStyle(Style6); // Style6
+	TheCanvasMap.AddLayer(Paraguay);
+	
+	var Peru=new CMLayerGeoJSON();
+	Peru.SetName("Peru");
+	Peru.SetHTMLAttribute("HTML");
+	Peru.SetURL("GISData/Peru.js",TheCanvasMap.GetView(),false);
+	Peru.SetStyle(Style5); // Style5
+	TheCanvasMap.AddLayer(Peru);
+	
+	var Suriname=new CMLayerGeoJSON();
+	Suriname.SetName("Suriname");
+	Suriname.SetHTMLAttribute("HTML");
+	Suriname.SetURL("GISData/Suriname.js",TheCanvasMap.GetView(),false);
+	Suriname.SetStyle(Style1); // Style1
+	TheCanvasMap.AddLayer(Suriname);
+	
+	var Uruguay=new CMLayerGeoJSON();
+	Uruguay.SetName("Uruguay");
+	Uruguay.SetHTMLAttribute("HTML");
+	Uruguay.SetURL("GISData/Uruguay.js",TheCanvasMap.GetView(),false);
+	Uruguay.SetStyle(Style2); // Style2
+	TheCanvasMap.AddLayer(Uruguay);
+	
+	var Venezuela=new CMLayerGeoJSON();
+	Venezuela.SetName("Venezuela");
+	Venezuela.SetHTMLAttribute("HTML");
+	Venezuela.SetURL("GISData/Venezuela.js",TheCanvasMap.GetView(),false);
+	Venezuela.SetStyle(Style2); // Style2
+	TheCanvasMap.AddLayer(Venezuela);	
+
+	// start the map
+		
+	TheCanvasMap.StartMap(false); // don't resize
+	
+	TheCanvasMap.ZoomTo(-15); // set the zoom level to fit out area of interest
+	TheCanvasMap.SetRefCenter(21200000,-38200000); // set the center of the map    [(Left OR Right),(Up OR Down)]
+	
+	TheCanvasMap.GetScene().SetSelectedBackgroundIndex(0);
+}
+
+//**********************************************************
+// Start of HTML Body
+//**********************************************************
+</script>
+
+<!--- body tag should call a function to initialize the map -->
+
+<body onload='init()'>
+	<div id="main_container"> <!-- main container for the entire web page. -->
+		<div class="sub-container2">
+			<!-------------------------------------- top of page ------------------------------------>
+			<!-- masthead at the top of the page -->
+			<div id="masthead" style="width:100%; height:24px; margin:0 auto;"> 
+			<!-- content for masthead goes here -->
+			</div>
+
+			<!-- header for the page including an image -->
+			 <!-- Begin header -->
+			<div id="header" style="width: 960px; height: 130px; margin:0 auto;">
+				<div class = "logo">
+					<a href="index.html"><img style="opacity: 0.8;" src="Images/Mountain_Ranges.png" width="960px" height="130px" alt="Mountain Ranges"></a>     
+				</div> 
+			</div> 
+			<!-- End header -->
+
+			<!-- this is the menu bar across the web page (i.e. navigation bar) -->
+			<div class="master_main_nav">
+				<div id="main_nav2" style="width: 960px; height: 52px; margin:0 auto;">
+					<ul>
+						<li><a href="index.html">Home</a></li> <!-- Change these links to point where you desire -->
+						<li><a href="Utilities.html">Utilities</a></li>
+						<li><a class="LinkActive" href="Map_Simplest_GetURL.html">Dynamic Map</a></li>
+						<li><a href="Resizable_Map.html">Resizable Map</a></li>
+					</ul>
+				</div> <!-- end main navigation bar -->
+			</div>
+	
+			<!-------------------------------------- content ------------------------------------>
+			<!--- This is the container for the map -->
+			<div style="background-color: rgba(89,89,89,0.8);">
+				<p class="pStyles" style="padding-left: 230px; padding-right: 230px; padding-top: 20px;">South America, the planet's 4th largest continent, includes (12) 
+				independent countries and (3) major territories; the Falkland Islands, Galapagos Islands and French Guiana. With a population of 379,500,000 (2009 est), it
+				is the fifth most populous continent falling below Asia, Africa, Europe and North America. The continent contains the world's highest waterfall, Angel Falls 
+				in Venezuela; the largest river (by volume), the Amazon River; the longest mountain range, the Andes, and the second driest place on earth (only Antartica is drier), 
+				the Atacama Desert in Chile. In addition, it includes the largest rainforest, the Amazon Rainforest; the highest capital city, La Paz, Bolivia; the highest commercially
+				navigable lake in the world, Lake Titicaca; and, excluding research stations in Antarctica, the world's southernmost permanently inhabited community, Puerto Toro, Chile.</p>
+
+				<!--- This is the container for the map. it is set to "absolute" position in the css file -->
+				<!-- <div style="margin: 0 auto; position: relative; left:110px;"> -->
+					<div id="MapContainer_0" style="margin-left: 230px;"></div>
+				<!-- </div> -->
+				<!--- This text must also be positioned absolutely so it appears below instead of behind the map --->
+
+ 
+				<p class="pStyles" style="margin-bottom: 0px; padding-left: 230px; padding-right: 230px; padding-bottom: 20px; padding-top: 20px;">*NOTE: This web page does require a web server to get the GeoJSON data.</p>
+			</div>
+			<!-------------------------------------- footer ------------------------------------>
+			<!-- begin footer container -->
+			<div class="Master_Footer">
+				<div id="footer_container2">
+					<!-- This is a footer at the bottom of the page -->
+					<div id="footer2">
+						<table border="0" cellspacing="0" cellspacing="5" width="960px">
+							<tr>
+								<td style="vertical-align: middle;" width="240px" align="left" valign="top">
+									<h3 class="h3Styles">Humboldt State University</h3>
+								</td>
+								<td width="240px" align="left" valign="top">
+									<h3 class="h3Styles">Created By Joshua Rodriguez</h3>
+								</td>
+								<td width="240px" align="left" valign="top">
+									<h3 class="h3Styles">October 12<sup>th</sup> 2016</h3>
+								</td>
+								<td width="240px" align="left" valign="top">
+									<h3 class="h3Styles">Contact: jr184@humboldt.edu</h3>
+								</td>							
+							</tr>
+						</table>
+					</div> <!-- end footer -->
+				</div> <!-- end footer container -->
+			</div> <!-- end Master_Footer -->
+		</div><!-- end of sub-container -->
+	</div> <!--- main_container -->			
+</body>
+</html>
