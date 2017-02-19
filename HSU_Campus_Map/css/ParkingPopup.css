@@ -1,0 +1,52 @@
+@import url(http://fonts.googleapis.com/css?family=Lato:300,400,700);
+ @font-face {
+	font-family: 'fontawesome';
+	src:url('../fonts/fontawesome.eot');
+	src:url('../fonts/fontawesome.eot?#iefix') format('embedded-opentype'),  url('../fonts/fontawesome.svg#fontawesome') format('svg'),  url('../fonts/fontawesome.woff') format('woff'),  url('../fonts/fontawesome.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+	font-weight: bold;
+}
+body {
+	font-family: 'Lato', Calibri, Arial, sans-serif;
+	font-weight: bolder;
+}
+.ParkingContent {
+	width: 300px;
+	/* height: 195px; */
+	color: #FFFFFF;
+	background-color: #000000;
+	padding: 10px;
+	margin: 0px;
+	overflow: hidden;
+}
+.ParkingInfo {
+	position: relative;
+	z-index: 50;
+}
+.HeaderNoSpace {
+	margin: 0px 0px 0px 3px;
+}
+.ParkingType {
+	font-size: 40px;
+	margin: 7px 3px 7px 3px;
+}
+.LotsNoSpace {
+	margin: 0px;
+	text-align: center;
+}
+.ParkingHeadLine {
+	border-top: 1px solid #E1E1E1;
+}
+.ParkTextCenter {
+	text-align: center; 
+	margin: 0px;
+}
+.SealStyle {
+	z-index: 20;
+	position: relative;
+	bottom: 80px;
+	left: 192px;
+	width: 175px;
+	height: 175px;
+}

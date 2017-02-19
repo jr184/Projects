@@ -1,0 +1,99 @@
+/***************************************************************************************/
+/* THIS IS THE STYLES OF THE LEFT AND BOTTOM SLIDE MENUS FOR THE "MENU" & INFO BUTTONS */
+/***************************************************************************************/
+
+/* Vertical Menu (General Styles)
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+.cbp-spmenu {
+	background-color: rgba(41, 84, 41, 0.9);
+	position: fixed;
+	height: 1400px;
+	bottom: 0;
+}
+
+
+/* Vertical Menu (These are the styles of the vertical menu)
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+
+.cbp-spmenu-vertical {
+	width: 380px;
+	height: 100%; /*auto;*/
+	top: 120px;
+	z-index: 1;
+	bottom: 0;
+	display: block;
+/* 	overflow-y: scroll; */
+}
+.cbp-spmenu-left {
+	left: -380px;
+	height: 100%;  /*auto;*/
+	bottom: 0;
+/* 	overflow-y: scroll; */
+	overflow-x: hidden;
+}
+.cbp-spmenu-left.cbp-spmenu-open {
+	left: 0px;
+	height: auto;
+	bottom: 0;
+	display: block;
+	overflow: auto;
+	overflow-x: hidden;
+}
+/* Horizontal Menu (These are the styles of the bottom menu)
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+
+.cbp-spmenu-horizontal {
+	width: 340px;
+	height: 500px;
+	right: 0;
+	z-index: 1;
+	overflow-y: hidden;
+}
+.cbp-spmenu-bottom {
+	bottom: -500px;
+	z-index: 1;
+	overflow-y:hidden;
+}
+.cbp-spmenu-bottom.cbp-spmenu-open {
+	bottom: 0px;
+	z-index: 1;
+	height: 500px;
+	overflow-y: hidden;
+}
+/* Transitions (Smooths the slide animation)
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+
+.cbp-spmenu {
+	-webkit-transition: all 0.3s ease;
+	-moz-transition: all 0.3s ease;
+	transition: all 0.3s ease;
+}
+/* Map (Places the map id behind the slide menus)
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+
+#map {
+	z-index: -1;
+}
+
+/* Media Queries (Adjusts the size of the menus, depending on the screen size)
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+
+@media screen and (max-width: 700px) {
+ .cbp-spmenu-horizontal {
+ font-size: 75%;
+ height: 400px;
+ width: 200px;
+}
+ .cbp-spmenu-bottom {
+ bottom: -400px;
+}
+}
+ @media screen and (max-width: 700px) {
+ .cbp-spmenu-vertical {
+ font-size: 90%;
+ width: 280px;
+}
+ .cbp-spmenu-left,  .cbp-spmenu-push-toleft {
+ left: -280px;
+}
+}
