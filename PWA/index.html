@@ -1,0 +1,323 @@
+<!--------------------------------------------------------------------------
+ This is the main PWA Telemeter wbb page for the PWA website. It contains:
+ - Telemeter Point Layer 
+ - PWA Offices Point Layer
+ - Esri Base Map Selection
+ - Zoom In and Out Functionality 
+ - Device List for Device Zoom In
+ - Graph Icon Info display
+ - Side Bar Info Section
+ 
+ Leaflet does not have an "onload" function so I had to put
+ the initialization code at the bottom of this page in "PWA_Map.js".
+ 
+ *Note: The web service calls (located in PWA_Map.js) do not work from a 
+        local drive (i.e. flash drive), must be established in server.
+--------------------------------------------------------------------------->
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>PWA Telemeter Map</title>                                                                              <!-- Title of the PWA Title Tab -->
+	<link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon"/>                                     <!-- Icon on Title tab -->
+	
+	<!-- CSS -------------------------------------------------------------------------------------->
+	<link rel="stylesheet" href="css/Main_Leaflet_Styles.css"/>	                                                  <!-- Leaflet Styles -->
+	<link rel="stylesheet" href="css/PWA_Map_Styles.css" type="text/css"/>                                        <!-- PWA Interactive Map Styles -->
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"/>    <!-- Has the Home Button icon for the Zoom Controls -->                                                 
+	
+	<!-- JS ---------------------------------------------------------------------------------------> 	
+	<script type="text/javascript" src="js/Leaflet.js"></script>                                                  <!-- Leaflet javascript -->
+	<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>                                         <!-- JQuery Library -->
+	<script type="text/javascript" src="js/leaflet.zoomhome.min.js"></script>                                     <!-- Zoom Home Button Leaflet Javascript functionality -->
+	<script type="text/javascript" src="js/jscharts.js"></script>                                                 <!-- JSCharts functionaliy -->
+	<script type="text/javascript" src="js/Leaflet_Esri.js"></script>                                             <!-- Leaflet Esri Javascript Library to switch basemaps on the map -->
+	<script type="text/javascript" src="js/Telemeters.js"></script>                                               <!-- Telemeter JSON file located under the "js" folder used to display Telemeter Device points on map (FALSE LOCATIONS, ONLY FOR DISPLAY PURPOSES) -->     	 
+	<script type="text/javascript" src="js/PWA_Offices.js"></script>                                              <!-- PWA Office JSON file located under the "js" folder used to display office location points on map -->  
+	<script type="text/javascript" src="js/Onclick_Buttons.js"></script>                                          <!-- Holds function to open and close the device list button, and display a larger graph for the "Expand" button, which is located in the "js" directory  -->		
+	
+	<!-- ORIGINALS -------------------------------------------------------------------------------->
+	<!-- This is the ACTUAL coordinate location points of the Telemeter devices, but all of them are stored in one location --> 	
+	<!-- <script type="text/javascript" src="ArraysReversedOrder/LocationArray.js"></script> -->                                         
+	<!-- <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />                        <!-- Original Leaflet CSS Styles -->
+	<!-- <script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>	                              <!-- Original Leaflet Javascript Library --> 
+	<!-- <link href="css/css_0451b7401495e1d01e9ad88d34b964e5.css" rel="stylesheet" type="text/css"/> -->         <!-- Original PWA Styles -->	
+	<!-- <script src="https://unpkg.com/esri-leaflet@2.0.6"></script> Original ESRI Leaflet styles-->             <!-- Original Leaflet Esri Javascript Library to switch basemaps on the map -->	
+	
+	<!-- TESTING MATERIAL ------------------------------------------------------------------------->
+	<!--<script type="text/javascript" src="js/LocationArray.js"></script> -->                                    <!-- This is the true telemeter locations -->
+	<!-- <link rel="stylesheet" href="css/MarkerCluster.css"/>                                                    <!-- Leaflet Clustering Styles -->    
+	<!-- <script type="text/javascript" src="js/leaflet.markercluster.js"></script>                               <!-- Leaflet Clustering Javascript file --> 
+	
+</head>
+
+<body onload="UpdateDeviceList()"> <!-- This loads the device name zoom options in the div id="DeviceList" -->
+
+	<div class="LineDivider1"></div>
+	
+	<!------------------------- Start of the Header Section ------------------------->
+	<div class="HeaderBackground">
+		<div class="ContactContainer"> <!-- Start of Contact Info. for PWA in header section, placement is because of the set width of the class "ContactContainer" -->	  
+			<div class="PWA"> <!-- Start of PWA Letters -->
+				<a href="http://www.pacificwatershed.com/">
+					<img src="images/PWA_Telemeters_Letters.png" style="width: 160px; opacity: 0.9;" alt="PWA"/>    
+				</a>
+			</div> <!-- End of PWA Letters -->
+			
+			<div id="headerLeft"> <!-- Start of PWA Phone Number & Contact link -->
+				<div class="float-right vline">
+					<div id="block-block-6" class="block block-block">
+						<div class="content">
+							<p style="color: #FFFFFF; font-family: arial,sans-serif;">
+								<strong>(707) 839-5130 |&nbsp;</strong><a href="http://www.pacificwatershed.com/company/contact-pwa">Contact Us</a>
+							</p>
+						</div>
+					</div>    
+				</div>    
+			</div>	<!-- End of Contact Link -->	
+		</div> <!-- End of Contact Info. -->
+		
+		<!----- Start of Header tabs within the Header Section ----->
+		<div class="Header"> 
+			<div class="TabContent">
+				<ul class="Tab-Menu sf-menu sf-horizontal sf-style-default">
+					<li><a href="http://www.pacificwatershed.com/">Home </a></li>
+					<li><a href="http://www.pacificwatershed.com/services/core-services">Services</a>
+						<ul>
+							<li><a href="http://www.pacificwatershed.com/services/geological-consulting" title="Geological Consulting">Geological Consulting</a></li>
+							<li><a href="http://www.pacificwatershed.com/services/hydrology-water-quality-monitoring" title="Hydrology &amp; Water Quality Monitoring">Hydrology &amp; Water Quality Monitoring</a></li>
+							<li><a href="http://www.pacificwatershed.com/services/erosion-assessments-watershed-restoration" title="Watershed Assessments &amp; Restoration">Erosion Assessments &amp; Watershed Restoration</a></li>
+							<li><a href="http://www.pacificwatershed.com/services/erosion-sediment-control" title="Erosion &amp; Sediment Control">Erosion &amp; Sediment Control</a></li>
+							<li><a href="http://www.pacificwatershed.com/services/road-and-trail-planning-analysis-and-treatment" title="Road &amp; Trail Planning and Analysis">Road &amp; Trail Planning and Analysis</a></li>
+							<li><a href="http://www.pacificwatershed.com/services/coastal-geomorphology-and-ecology" title="Coastal Geomorphology and Ecology">Coastal Geomorphology and Ecology</a></li>
+							<li><a href="http://www.pacificwatershed.com/services/stormwater-management-qspqsd-training" title="Stormwater Management &amp; QSP/QSD Training">Stormwater Management &amp; QSP/QSD Training</a></li>
+							<li><a href="http://www.pacificwatershed.com/services/geographic-information-systems-gis" title="Geographic Information Systems (GIS)">Geographic Information Systems (GIS)</a></li>
+							<li><a href="http://www.pacificwatershed.com/services/civil-environmental-engineering" title="Services for Property Owners">Civil &amp; Environmental Engineering</a></li>
+						</ul>
+					</li>
+					<li><a href="http://www.pacificwatershed.com/company/our-mission">company</a></li>
+					<li><a href="http://www.pacificwatershed.com/projects">Projects</a>
+						<ul>
+							<li><a href="http://www.pacificwatershed.com/projects/featured_projects">Featured Project Profiles</a></li>
+							<li><a href="http://www.pacificwatershed.com/projects/before-after-project-photos" title="Before and After PWA Project Photos">Before and After Project Photos</a></li>
+							<li><a href="http://www.pacificwatershed.com/projects/project-videos">Project Videos</a></li>
+						</ul>
+					</li>
+					<li><a href="http://www.pacificwatershed.com/news-events">News</a></li>  
+					<li><a href="http://www.pacificwatershed.com/PWA-publications-library">Publications</a></li>
+					<li><a href="http://www.pacificwatershed.com/gsa-schedule">GSA Advantage</a></li>
+					<li><a href="index.html">Telemeter</a></li>
+					<li id="menu-2140-1" class="active-trail"><a href="http://pacificwatershed.com/search" class="active">search</a></li>
+				</ul>
+			</div>
+		</div>
+		<!----- End of Header Tabs ----->
+		
+	</div> 
+	<!------------------------- End of the Header Section ------------------------->
+	
+	<div class="LineDivider2"></div>
+	
+	<!------------------------- Start of PWA Interactive Map ------------------------->
+	<div class="MapContainer"> 
+		<div id="map"> <!-- Start of leaflet "map"-->
+			
+			<!----- Start of Base Map Selection ----->
+			<div id="basemaps-wrapper" class="leaflet-basemap-options"> 
+				<h3 class="BaseMapTitle">Base Map Selection</h3>
+				<label style="margin: 0 auto;">
+				<select name="basemaps" class="basemaps" id="basemaps" onChange="changeBasemap(basemaps)">
+					<div class="SelectBackground">
+						<option value="Topographic">Topographic</option>
+						<option value="Streets">Streets</option>
+						<option value="Imagery">Imagery</option>
+					</div>
+				</select>
+			</div>					
+			<!----- End of Base Map Selection ----->
+			
+			<!----- Start of Device Menu Button ----->
+			<div class="Directory" onclick="ListButton_OnClick()">
+				<span id="DeviceMenu">&#9776; Device Menu</span>
+			</div>     
+			<!----- End of Device Menu Button ----->
+			
+			<!----- Start of Device List Selection ----->
+			<div class="ListContainer" id="DeviceList"></div>
+			<!----- End of Device List Selection ----->
+			
+			<!----- Start of Data Menu Button ----->
+			<div class="DataClose" id="NavOpen" onclick="NavBar_OnClick()">          <!-- Function is called in Onclick_Button.js -->
+				<p>Data Menu</p>
+			</div>	
+			<!----- End of Data Menu Button ----->
+			
+			<!----- Start of Data Menu Close Button ----->
+			<div>
+				<p class="NavClose" id="NavClose" onclick="NavBar_OnClick()">+</p>   <!-- Function is called in Onclick_Button.js -->
+			</div>
+			<!----- End of Data Menu Close Button ----->
+			
+			<!----- Start of Nav Side Bar ----->
+			<div class="NavContainer" id="Results"> 
+				<div class="DeviceTitle">
+					<h2 id="DeviceName">Device Name</h2> <!-- id "DeviceName" is called within PWA_Map.js -->
+				</div>   
+				
+				<!-- This is the divider line underneath the Device Name -->
+				<div style="padding-bottom: 10px;">
+					<hr/>
+				</div>
+
+				<div class="GraphContainer"> <!-- Start of container of the Graph in the Nav Bar with the set width and height of the graph within the GraphContainer styles-->
+					<div id="graph" class="GraphStyles">                              <!-- id "graph" is called upon in the PWA_Map.js -->
+						No data associated with device.                               <!-- NEED BETTER WORDING -->                    
+					</div>
+				</div> <!-- End of container of the Graph in the Nav Bar -->
+				
+				<div class="UnitContainer">
+					<div style="width: 135px; margin: 0 auto;">
+						<input type="button" class="Metric" id="MetricButton" onclick="MetricSwitch()" value="Metric"><input type="button" class="Imperial" id="ImperialButton" onclick="ImperialSwitch()" value="Imperial">	
+					</div>
+				</div>
+				
+				<div style="margin: 0 auto; padding-bottom: 15px; padding-top: 15px;"> 	<!-- Start of timeframe selection for graphing (Original padding-top was 40px without Metric Conversion Buttons) -->  
+					<table style="margin: 0 auto; border: 1px solid #a6a6a6;" width="300" border="0" cellspacing="0">
+						<tr>
+							<td class="TableHeaderStyles" style="border-right: 1px solid #a6a6a6;">
+								<p>Coordinates</p>             
+							</td>
+							<td class="TableHeaderStyles" style="border-right: 1px solid #a6a6a6;">
+								<p>Time Selection</p>          <!-- WE NEED TO SOLVE NO DEVICE SELECTION ISSUE, 404 ERRORS OCCUR WHEN NO DEVICE IS SELECTED-->
+							</td>
+							<td class="TableHeaderStyles">
+								<p>Display Graph</p> 
+							</td>
+						</tr>
+
+						<tr>
+							<td class="CoordinatesStyles" style="border-right: 1px solid #a6a6a6;">
+								<p id="Coordinates">--</p>   				
+							</td>					
+							<td align="center" class="CoordinatesStyles" style="border-right: 1px solid #a6a6a6;">
+								<label style="margin: 0 auto;">
+									<!-- onchange function is within PWA_Map.js -->
+									<select name="DropMenu" id="DropMenu" onchange="MeasurementRequest('graph')">     <!-- ,'true' Start of time selection options within side bar onchange -->
+										<option selected value="_day">Day</option>
+										<option value="_week">Week</option>
+										<option value="_month">Month</option>
+										<option value="_sixmonth">6-Month</option>
+										<option value="_year">Year</option>
+										<!-- <option value="_presentyear">Present Year</option> -->
+									</select>
+								</label>							
+							</td>
+							<td align="center" class="CoordinatesStyles">
+								<input class="LargeDisplay" type="button" onclick="GraphDisplay()" value="Expand"/>
+							</td>
+						</tr>					
+					</table>
+				</div> <!-- End of timeframe selection for graphing -->
+				
+				<!-- All radio buttons have onclick functions located in the "js" directory in "PWA_Map.js", DEFECT: Draw errors occur when variables are selected to quickly and graph isn't finished drawing -->
+				<!-- onclick function is within PWA_Map.js -->
+				<div class="Variables">
+					<div class="ButtonBuffer">  <!-- Start of Radio Buttons --> 
+						<form name="SensorSelection"> 
+							<label><input Name="Measurement" id="Measurement_tempir" onclick="MeasurementRequest('graph')" checked="checked" type="radio"><span id="TempIR">Temperature Infared (&#8451;)</span></input></label><br>        <!-- Temperature Infared Radio Button -->
+							<label><input Name="Measurement" id="Measurement_flowtotal" onclick="MeasurementRequest('graph')" type="radio"><span id="FlowTotal">Flow Total (L)</span></input></label><br>                                   <!-- Flow Total Radio Button -->   
+							<label><input Name="Measurement" id="Measurement_flowrate" onclick="MeasurementRequest('graph')" type="radio"><span id="FlowRate">Flow Rate (L/min.)</span></input></label><br>                                 <!-- Flow Rate Radio Button -->      
+							<label><input Name="Measurement" id="Measurement_conductivity" onclick="MeasurementRequest('graph')" type="radio"><span id="Conduct">Conductivity (&#x3BC;S)</span></input></label><br>                         <!-- Conductivity Radio Button -->
+							<label><input Name="Measurement" id="Measurement_tempwater" onclick="MeasurementRequest('graph')" type="radio"><span id="WaterTemp">Water Temperature (&#8451;)</span></input></label><br>                      <!-- Temperature Water Radio Button -->
+						</form>
+					</div> <!-- End of Radio Buttons -->
+				</div> 					
+				
+				<!-- Start of GraphInfo --> 
+				<div id="GraphInfo">
+					<ul>
+						<li>
+							<strong>Days</strong>: 
+								<ul>
+									<li>24 points for 24 hr intervals</li>
+									<li>Each hour is averaged</li>
+								</ul>
+						</li>
+						<li>
+							<strong>Weeks</strong>:
+								<ul>
+									<li>28 points for 7 Day intervals</li>
+									<li>Each point represents an average of 6 hours of data</li>
+								</ul>							
+						</li>
+						<li>
+							<strong>Month</strong>: 
+								<ul>
+									<li>30 Points for 30 Day intervals</li>
+									<li>Each point represents an average day</li>
+								</ul>							
+						</li>
+						<li>
+							<strong>Six-Month</strong>: 
+								<ul>
+									<li>30 Points for 6-Month intervals</li>
+									<li>Each point represents 6-day averages (each point is 6 days apart)</li>
+								</ul>							
+						</li>
+						<li>
+							<strong>Year</strong>:
+								<ul>
+									<li>36 Points for 12-Month Intervals</li>
+									<li>Each point represents 10 day averages (each point is 10 days apart)</li>
+								</ul>							
+						</li>
+					</ul>
+				</div>
+				<!-- End of GraphInfo -->
+				
+				<!-- Graph Info. Button -->
+				<div id="InfoHelp" class="InfoHelp" onclick="GraphInfo()">i</div>
+				
+			</div>
+			<!----- End of Nav Side Bar ----->
+			
+		</div> <!-- End  of leaflet "map"-->
+	</div> 
+	<!------------------------- End of PWA Interactive Map ------------------------->
+	
+	<!------------------------- Start of Credits ------------------------->
+	<div id="credits">
+		<span>&copy; 2016 Pacific Watershed Associates Inc. 
+			<a href="http://www.pacificwatershed.com/company/contact-pwa" class="contact">Contact</a>
+			<a href="feed://drupal.pacificwatershed.com/newsfeed"><img src="images/feed.png"></a>
+		</span>
+		
+		<span class="programmers">
+			<a href="https://www.linkedin.com/in/joshua-rodriguez-63424854?trk=nav_responsive_tab_profile_pic" target="_blank">Front-End Developer: Joshua Rodriguez</a>
+		</span>
+	</div>
+	
+	<div id="credits" style="padding-bottom: 5px;">
+		<span>For more information on Telemeter devices, click <a href="http://telemeterhome.com/" class="contact">here.</a>
+		<span class="programmers"><a href="#">Back-End Developer: Brady Goodwin</a></span>
+	</div>
+	<!------------------------- End of Credits ------------------------->
+	
+	<!------------------------- Start of PopupGraphContainer ------------------------->
+	<div id="PopupGraphContainer">
+		<div>
+			<p class="CloseButton" onclick="GraphClose()">+</p>    <!-- Close button of the displayed graph -->
+		</div>
+		<div id="PopupGraph">		
+			<div id="EnlargedGraph" class="PopUpGraphStyles">      <!-- Expanded Graph of the smaller graph on the side bar  -->                          
+				No data associated with device.                                              
+			</div>
+		</div>
+	</div>
+	<!------------------------- End of PopupGraphContainer ------------------------->
+		
+	<!------------------------- Start of PWA Leaflet Functionality ------------------------->
+	<script src="js/PWA_Map.js"/></script>	                       <!-- Holds the Leaflet map functionality, which is located in the "js" directory  -->   
+	<!------------------------- End of PWA Leaflet Functionality ------------------------->
+</body>
+</html>
