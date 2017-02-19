@@ -1,0 +1,190 @@
+<!DOCTYPE HTML>
+
+<html><!-- InstanceBegin template="/Templates/Template_Main.dwt" codeOutsideHTMLIsLocked="false" -->
+
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>GSP 470 - Canvas Map</title>
+<!-- InstanceEndEditable -->
+
+<link href="../Includes/canvas_map.css" rel="stylesheet" type="text/css">
+<!-- InstanceBeginEditable name="head" -->
+<!-- InstanceEndEditable -->
+
+</head>
+
+<body>
+    
+<!-- begin main container --><div id="main_container" style="width:100%;overflow:visible">
+
+
+<!-- begin masthead --><div id="masthead" style="width:100%;height:24px;"> 
+
+<!-- content for masthead goes inside masthead div -->
+
+<!-- end masthead --></div>
+
+
+<!-- begin header --><div id="header" style="width:100%;height:100px;">
+
+<!-- content for header goes inside header div -->
+
+    <!-- begin logo --><div id="logo">
+      <a href="../../../index.html"><img src="../Images/CanvasMap_Logo_285w_v2.png" width="285" height="100" alt="Logo"></a>      
+    <!-- end logo --></div>
+
+<!-- end header --></div>
+
+
+<!-- begin main nav container --><div id="main_nav_container" style="width:100%;">
+<!-- begin main nav --><div id="main_nav" style="width:100%">
+	<ul>
+    	<li><a href="CanvasMap.html">Home</a></li>
+        <li><a href="GettingStarted.html">GETTING STARTED</a></li>
+        <li><a href="Tutorials.html">tutorials</a></li>
+        <li><a href="Reference.html">Reference</a></li>
+	</ul>
+<!-- end main nav --></div>
+
+
+
+<!-- end main nav container --></div>
+
+<!-- begin main content container --><div id="main_content_container" style="width:100%">
+
+<!-- begin main content --><div id="content" style="width:960px;margin:0 auto">
+
+<!-- InstanceBeginEditable name="EditRegion3" -->
+<h1>Interacting with Other Elements
+</h1>
+<p>A powerful and relatively easy way to create interactive mapping applications is to create a map that displays dynamic information as the user interacts with the map.</p>
+<p>The example below will display chart data using &quot;Chart.js&quot;, a freely available library. When the user clicks in each county, the information for that county is displayed. </p>
+<p><a href="../Map_WebMercator_US_Census.html">Example</a> (this map can take a while to load as the county data is extensive).</p>
+<h2>The Functions To Override</h2>
+<p>JavaScript is very flexible in that you can &quot;override&quot; a function in a JavaScript object after the object has been created. This allows us to replace existing functions with new functions and take control of interactions with the user.</p>
+<p>The following functions can be replaced for any layer:</p>
+<pre>YourLayer.MouseDown=function(TheView,RefX,RefY) {...}
+YourLayer.MouseMove=function(TheView,RefX,RefY) {...}
+YourLayer.MouseUp=function(TheView,RefX,RefY) {...}
+YourLayer.Paint=function(TheView) {...}
+YourLayer.PaintSelected=function(TheView) {...}
+YourLayer.Resize=function(TheView) {...}
+YourLayer.GetSearchResults=function(SearchPhrase,ResultsPanel) {...}</pre>
+<p>&nbsp;</p>
+<h2>The Code</h2>
+<p>Below is the code for updating the chart when the user clicks on an area.  This code can be inserted just before you call &quot;StartMap()'. You'll also need to add an additional canvas element for the chart.</p>
+
+<pre>
+Layer_Countries.MouseDown=function(TheView,RefX,RefY) 	
+{
+	var Used=false; // flag to indicate if we have used the event
+	
+	// if this layer was clicked with the INFO tool then update the chart
+	
+	if ((this.GetVisible())&amp;&amp;(TheView.GetTool()==TOOL_INFO)) 		
+	{	
+		// get the feature selected, if any						
+		var FeatureIndex=this.In(TheView,RefX,RefY); 						
+		if (FeatureIndex!=-1) // -1 indicates no feature selected			
+		{				
+			// get the feature from the GeoJSON object
+			var TheFeatures=this.TheData.features;
+			var TheFeature=TheFeatures[FeatureIndex];
+		
+			// update the DIV tag over the chart to contain the name of the selected county
+			var TheCountyInfo=document.getElementById(&quot;CountyInfo&quot;);
+			
+			TheCountyInfo.innerHTML=&quot;County: &quot;+TheFeature.properties[&quot;Areaname&quot;];
+			
+			// Setup the labels and &quot;buckets&quot; for the chart
+			
+			var Labels=[&quot;AGE010180D&quot;,&quot;AGE010190D&quot;,&quot;AGE010200D&quot;,&quot;AGE010180D&quot;,&quot;AGE010210D&quot;,&quot;AGE030200D&quot;];
+			
+			var Buckets=[]; // the buckets (values) for each cateogory
+			
+			for (var i=0;i&lt;Labels.length;i++) 
+			{
+				var TheLabel=Labels[i];
+				Buckets[i]=TheFeature.properties[TheLabel];
+			}
+			// Setup the data for the chart library
+			
+			var Color=&quot;rgba(20,20,20,1)&quot;;
+			
+			var TheBarChartData={
+				labels : Labels,
+				datasets : [
+					{
+						fillColor : Color,
+						strokeColor : Color,
+						highlightFill: Color,
+						highlightStroke: Color,
+						data : Buckets
+					}
+				]
+			}
+			
+			Chart.defaults.global.animation=false; // comment this out to see animated charts
+			
+			// Get the canvas element for the chart and set its data
+			
+			var TheCanvas=document.getElementById(&quot;TheCanvas&quot;); // canvas
+			var TheContext=TheCanvas.getContext(&quot;2d&quot;);
+			var BarChart=new Chart(TheContext).Bar(TheBarChartData, 
+			{
+			//					responsive : true // add other properties if desired
+			});
+			
+			// for some reason the chart gets larger with each call so we have to reset it's position
+			
+			CMUtilities.AbsolutePosition(TheCanvas,800,60,300,300);
+			
+			Used=true; // let the caller know we've used the event so no one else uses it
+		}
+	}
+	return(Used);
+};
+</pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<!-- InstanceEndEditable -->
+
+<!-- end main content --></div>
+
+<!-- end main content container --></div>
+
+
+<!-- end main container --></div>
+
+<!-- begin footer container --><div id="footer_container" style="width:100%;height:175px;background-color:#333333;color:#999999">
+
+<!-- begin footer --><div id="footer" style="width:960px;margin:0 auto">
+
+<table width="600px" style="margin-top:20px">
+  <tr>
+    <td width="200px" align="left" valign="top">
+    	<h3>Humboldt State Unviersity</h3>
+        <p></p>
+    </td>
+    <td width="200px" align="left" valign="top">
+    	<h3>Created By Dr. Jim Graham</h3>
+        <p></p>
+    </td>
+    <td width="200px" align="left" valign="top">
+    	<h3>2015</h3>
+        <p></p>
+    </td>
+  </tr>
+</table>
+
+
+<!-- end footer --></div>
+
+<!-- end footer container --></div>
+
+</body>
+
+<!-- InstanceEnd --></html>

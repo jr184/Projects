@@ -1,0 +1,194 @@
+<!DOCTYPE HTML>
+
+<html><!-- InstanceBegin template="/Templates/Template_Main.dwt" codeOutsideHTMLIsLocked="false" -->
+
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>GSP 470 - Canvas Map</title>
+<!-- InstanceEndEditable -->
+
+<link href="../Includes/canvas_map.css" rel="stylesheet" type="text/css">
+<!-- InstanceBeginEditable name="head" -->
+<!-- InstanceEndEditable -->
+
+</head>
+
+<body>
+    
+<!-- begin main container --><div id="main_container" style="width:100%;overflow:visible">
+
+
+<!-- begin masthead --><div id="masthead" style="width:100%;height:24px;"> 
+
+<!-- content for masthead goes inside masthead div -->
+
+<!-- end masthead --></div>
+
+
+<!-- begin header --><div id="header" style="width:100%;height:100px;">
+
+<!-- content for header goes inside header div -->
+
+    <!-- begin logo --><div id="logo">
+      <a href="../../../index.html"><img src="../Images/CanvasMap_Logo_285w_v2.png" width="285" height="100" alt="Logo"></a>      
+    <!-- end logo --></div>
+
+<!-- end header --></div>
+
+
+<!-- begin main nav container --><div id="main_nav_container" style="width:100%;">
+<!-- begin main nav --><div id="main_nav" style="width:100%">
+	<ul>
+    	<li><a href="CanvasMap.html">Home</a></li>
+        <li><a href="GettingStarted.html">GETTING STARTED</a></li>
+        <li><a href="Tutorials.html">tutorials</a></li>
+        <li><a href="Reference.html">Reference</a></li>
+	</ul>
+<!-- end main nav --></div>
+
+
+
+<!-- end main nav container --></div>
+
+<!-- begin main content container --><div id="main_content_container" style="width:100%">
+
+<!-- begin main content --><div id="content" style="width:960px;margin:0 auto">
+
+<!-- InstanceBeginEditable name="EditRegion3" -->
+<h1>Map with Pyramids </h1>
+<p>As the size and complexity of your data increases, your maps will begin to slow down. The solution for this is to load the map as &quot;tiles&quot;. The tiles are arranged in &quot;steps&quot; from a few top tiles which represent the entire area of the layer at low resolution to a bottom step that can include thousands of tiles representing the highest resolution for the data.</p>
+<p>This tutorial starts with a <a href="../Map_WebMercator_Resizable.html">resizeable</a> map.</p>
+<h2>Making a Map Resizable</h2>
+<p>Take a look at the code in the resizable map and you'll see there are some additional lines at the top to provide a projector for the map. This is because we'll be using the GoogleMercator projection for the map but we still want to be able to see coordinates in the status bar as Geographic. The following lines provide this:</p>
+<pre>	var TheProjector=new CMProjectorGoogleMaps();
+	TheProjector.SetZoomLevel(18);
+	TheCanvasMap.SetProjector(TheProjector);	</pre>
+<p>To perform the resize, we'll use jQuery, a common JavaScript library, to attach a &quot;resize&quot; function to the document:</p>
+<pre>&lt;script src=&quot;Includes/jquery-2.1.0.js&quot;&gt;&lt;/script&gt;</pre>
+<p>The following lines of code make the map resize. </p>
+<pre>	$( window ).resize(function() {
+		TheCanvasMap.Resize();
+	});
+	
+	// call the resize function to setup the map for the first time
+	TheCanvasMap.Resize();</pre>
+<h2>Projecting Data Sets to GoogleMercator</h2>
+<p>There are a large number of services for backgrounds for your web-based maps. These are constructed as &quot;pyramids&quot; of &quot;tiles&quot; that you have seen in GoogleMaps and OpenStreetMap. These tiles are in a custom projectiion that I refer to as &quot;GoogleMercator&quot;. To be compatible with tile layers from OpenStreetMap and other vectors, we need to be using the exact spatial reference that was created with GoogleMaps. This is not a great projection for maps but there are many tile sets out there and we'll be using them in future tutorials (some of them are really cool). For this reason, you'll need to project your data into the GoogleMaps projection. BlueSpray supports this with a custom projection engine and I don't know of another GIS application that does.</p>
+<p>Convert several vector layers to GoogleMercator and add them to the resizable map.</p>
+<p>To convert a layer to GoogleMercator in BlueSpray:</p>
+<ul>
+	<li>Obtain a shapefile (or other supported format) with polygons or linestrings (polylines) in the spatial reference WGS84, Geographic.</li>
+	<li>Load the file into BlueSpray</li>
+	<li>Right-click on the &quot;Scene&quot; and select &quot;Transforms -&gt; Change SRS&quot;.</li>
+	<li>Click on &quot;Explore&quot;</li>
+	<li>Select &quot;GoogleMaps&quot; from the &quot;Projector&quot; menu</li>
+	<li>Uncheck all the options under &quot;Clipping &quot;Settings&quot;</li>
+	<li>Click &quot;Update&quot;.</li>
+	<li>Click &quot;OK&quot;</li>
+	<li>Click &quot;OK&quot; and your data should be projected to the GoogleMaps projection.</li>
+	<li>Right click on the layer and select &quot;Export to File...&quot;</li>
+	<li>Save the file with a &quot;.js&quot; extension. This will save it as a GeoJSON  formatted file.</li>
+	<li>Move the file to where your web page can access it.</li>
+</ul>
+<p></p>
+<h2>Open Pyramids</h2>
+<p>Many publically available data sets use the  OpenFormat that is compatible with OpenStreetMap. If you check the &quot;resizable&quot; map code, you'll see that a number of layers are added from publically available data sets. You can also add them to the &quot;Layers&quot; tab as the code below does:</p>
+<pre>	var Layer_World=new CMLayerPyramidOpenFormat();<br>	Layer_World.SetName(&quot;Stamen&quot;);<br>	<br>	TheCanvasMap.AddLayer(Layer_World);<br>	<br>	Layer_World.SetURL(&quot;http://c.tile.stamen.com/watercolor/{z}/{x}/{y}.png&quot;,TheView);<br>
+</pre>
+<h2>Vector Pyramids</h2>
+<p>Vector layers can also slow down a web solution if they are too complicated. Vector layers of small areas, such as islands, can be displayed with GeoJSON but large layers such as a countries of the world layer, need to be converted into a Pyramid of tiles. This can be done for vector layers in exactly the same way as rasters except the &quot;To Pyramid Layer&quot; is in the &quot;Transforms&quot; menu. </p>
+<pre>var Layer_World=new CMLayerPyramid();
+
+TheCanvasMap.AddLayer(Layer_World);
+
+Layer_World.SetURL("/GISData/GoogleMercator/Pyramid/NaturalEarth_Countries/",TheCanvasMap.GetView()); 
+Layer_World.SetName("Countries");
+</pre>
+<p>A sample pyramid folder is available for the <a href="/GISData/GoogleMercator/Pyramid/Countries.zip">Natural Earth Countries data set</a>.</p>
+<p>To create vector pyramids In BlueSpray:</p>
+<ol>
+  <li>In BlueSpray, load a shapefile or other vector layer.</li>
+  <li>Prepare an attribute column with the HTML content you'll want to show the user when they click on the layer. </li>
+  <li>It is recommended that you remove as many of the other attributes as possible as they will slow down loading the intial layer. The tiles themselves do not include the attributes so this will not include tile load time.</li>
+  <li>Project the layer to the desired spatial reference by right clicking on the Scene and selecting &quot;Transforms -&gt; Change SRS&quot;.
+    For GoogleMaps spatial reference: 
+    <ol>
+      <li>Click on the &quot;Explorer&quot; button.</li>
+      <li>From the &quot;Projector&quot; popup, select &quot;GoogleMaps Projector&quot;</li>
+      <li>Uncheck all the &quot;Allow&quot; check boxes</li>
+      <li>Click &quot;Update&quot; to make sure the entire range of the projection is displayed</li>
+      <li>Click &quot;OK&quot; and then &quot;OK&quot; again      </li>
+    </ol>
+  </li>
+  <li>Convert the layer to a  pyramid layer by right-clicking on the layer and selecting &quot;Transforms -&gt; To Pyramid Layer&quot;.</li>
+  <li>In the dialog that appears, you can just click &quot;OK&quot;. This will create a new &quot;Pyramid&quot; layer.</li>
+  <li>Right click on the layer and select  &quot;Export To File&quot;.</li>
+  <li>Select &quot;Canvas Map Folder&quot; from the &quot;Files of Type&quot;  popup and navigate to a folder for the tiles.</li>
+  <li>The &quot;File name&quot; is actually ignored as BlueSpray will generate a number of files that have pre-defined names that CanvasMap will recognize.</li>
+  <li>WHen you click &quot;OK&quot; BlueSpray will begin creating tiles.</li>
+  </ol>
+<p>In your HTML Page, you can now add a &quot;CMLayerPyramid&quot; layer as you would any other layer and just set the &quot;URL&quot; in the &quot;SetURL()&quot; function to point to the folder with the tiles. Make sure to include a forward slash at the end of the URL so CanvasMap knows you are specifying a folder instead of a file. </p>
+<p>The code below loads a country layer that has been converted to a pyramid. </p>
+<pre>var Layer_Test=new CMLayerPyramid();
+Layer_Test.SetHTMLAttribute("COUNTRY");
+		
+Layer_Test.SetStyle({fillStyle:"Green"}); // fill the data with pale green color
+		
+Layer_Test.SetURL("/GISData/GoogleMercator/Pyramid/Countries/",TheCanvasMap.GetView(),true);
+		
+TheCanvasMap.AddLayer(Layer_Test);
+</pre>
+
+<p>Historical Note: this approach was first introduced by &quot;TopoZone&quot; for serving up the topographic maps for the United States. </p>
+<h2> Raster Pyramids</h2>
+<p>Large rasters need to be turned into &quot;pyramids&quot; of &quot;tiles&quot; to keep the performance fast. This can be done in BlueSpray by right clicking on a raster layer and selecting &quot;Transforms (other) -&gt; To Pyramid Layer &quot;. This will create a pyramid of tiles in BlueSpray. Then, right-click and select &quot;Export to File&quot;. Navigate to a folder for the pyramid files and elect &quot;Canvas Map Folder&quot; as the file type. Don't worry about the file name as BlueSpray will put a large number of files in the folder including &quot;pngs&quot; that represent the files, an &quot;info.js&quot; file with information on the raster, and a series of &quot;tile&quot; files with information on each tile. </p>
+<pre>var Layer_World=new CMLayerPyramid();
+
+TheCanvasMap.AddBackground(Layer_World);
+
+Layer_World.SetURL("/GISData/GoogleMercator/Pyramid/BlueMarble",TheCanvasMap.GetView()); 
+Layer_World.SetName("BlueMarble");
+</pre>
+<p>Note that you do not need to provide the bounds as this is already defined by the tiling &quot;info.js&quot; file. You do need to call &quot;AddBackground()&quot; to add a tiled layer as a background but call &quot;AddLayer()&quot; if you want it to appear in the layer list.</p>
+<p>Also note that the layer should be convered into the desired spatial reference before converting it to a pyramid.</p>
+<!-- InstanceEndEditable -->
+
+<!-- end main content --></div>
+
+<!-- end main content container --></div>
+
+
+<!-- end main container --></div>
+
+<!-- begin footer container --><div id="footer_container" style="width:100%;height:175px;background-color:#333333;color:#999999">
+
+<!-- begin footer --><div id="footer" style="width:960px;margin:0 auto">
+
+<table width="600px" style="margin-top:20px">
+  <tr>
+    <td width="200px" align="left" valign="top">
+    	<h3>Humboldt State Unviersity</h3>
+        <p></p>
+    </td>
+    <td width="200px" align="left" valign="top">
+    	<h3>Created By Dr. Jim Graham</h3>
+        <p></p>
+    </td>
+    <td width="200px" align="left" valign="top">
+    	<h3>2015</h3>
+        <p></p>
+    </td>
+  </tr>
+</table>
+
+
+<!-- end footer --></div>
+
+<!-- end footer container --></div>
+
+</body>
+
+<!-- InstanceEnd --></html>

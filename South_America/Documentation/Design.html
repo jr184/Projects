@@ -1,0 +1,268 @@
+<!DOCTYPE HTML>
+
+<html><!-- InstanceBegin template="/Templates/Template_Main.dwt" codeOutsideHTMLIsLocked="false" -->
+
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>GSP 470 - Canvas Map</title>
+<!-- InstanceEndEditable -->
+
+<link href="../Includes/canvas_map.css" rel="stylesheet" type="text/css">
+<!-- InstanceBeginEditable name="head" -->
+<!-- InstanceEndEditable -->
+
+</head>
+
+<body>
+    
+<!-- begin main container --><div id="main_container" style="width:100%;overflow:visible">
+
+
+<!-- begin masthead --><div id="masthead" style="width:100%;height:24px;"> 
+
+<!-- content for masthead goes inside masthead div -->
+
+<!-- end masthead --></div>
+
+
+<!-- begin header --><div id="header" style="width:100%;height:100px;">
+
+<!-- content for header goes inside header div -->
+
+    <!-- begin logo --><div id="logo">
+      <a href="../../../index.html"><img src="../Images/CanvasMap_Logo_285w_v2.png" width="285" height="100" alt="Logo"></a>      
+    <!-- end logo --></div>
+
+<!-- end header --></div>
+
+
+<!-- begin main nav container --><div id="main_nav_container" style="width:100%;">
+<!-- begin main nav --><div id="main_nav" style="width:100%">
+	<ul>
+    	<li><a href="CanvasMap.html">Home</a></li>
+        <li><a href="GettingStarted.html">GETTING STARTED</a></li>
+        <li><a href="Tutorials.html">tutorials</a></li>
+        <li><a href="Reference.html">Reference</a></li>
+	</ul>
+<!-- end main nav --></div>
+
+
+
+<!-- end main nav container --></div>
+
+<!-- begin main content container --><div id="main_content_container" style="width:100%">
+
+<!-- begin main content --><div id="content" style="width:960px;margin:0 auto">
+
+<!-- InstanceBeginEditable name="EditRegion3" -->
+<h1>Design Details</h1>
+<p>Below are some additional details on the design of CanvasMap.</p>
+<h2>Element Containment</h2>
+<p>&nbsp;</p>
+<ul>
+	<li>MAP_HEADER</li>
+	<li>TOOL_CONTAINER
+		<ul>
+			<li>TOOL_EDIT</li>
+			<li>TOOL_SELECT</li>
+			<li>TOOL_INFO</li>
+		</ul>
+	</li>
+	<li>CANVAS_CONTAINER
+		<ul>
+			<li>NAVIGATION </li>
+			<li>NORTH_ARROW</li>
+			<li>SCALE_BAR</li>
+			<li>CANVAS</li>
+			<li></li>
+		</ul>
+	</li>
+	<li>LAYER_LIST
+		<ul>
+			<li>BACKGROUND_LAYERS</li>
+			<li>FORGROUND_LAYERS</li>
+		</ul>
+	</li>
+	<li>MAP_FOOTER
+		<ul>
+			<li>SRS</li>
+			<li>COORDINATES
+				<ul>
+					<li>COORDINATE_PIXELS</li>
+					<li>COORDINATE_REF</li>
+					<li>COORDINATE_GEOGRAPHIC</li>
+				</ul>
+			</li>
+			<li>CREDITS (text string that can include author and date)</li>
+		</ul>
+	</li>
+</ul>
+<p>The main aggregation hierarchy and the associated &quot;Other Classes&quot; used by CanvasMap.</p>
+<p>In its full glory, CanvasMap implements the visualization portion of a full-desktop GIS application. This includes the ability to add, move, and delete layers, show the location of the cursor in various coordinate systems, and show various symbology for spatial data.</p>
+<p>The CanvasMap is the top level in the aggregation hierarchy and combines together the scene with a &quot;LayerList&quot;, a &quot;Status&quot; panel, and potentially other elements of your design! The CMScene is effectively an array of layers while each layer contains one type of data (points, polylines, polygons, or raster). The CMView takes care of all the drawing into the HTML 5 Canvas element. </p>
+<p>The other classes include a class to help with standard Dialogs, a series of &quot;Projectors&quot; for various projections, and a utilities file for everything that is left over.</p>
+<h2>Inheritance Hierarchy</h2>
+<p>The inheritance hierarchy is very simple as shown below.</p>
+<p><img src="Inheritance.png" width="800" height="254" alt="A graphic of the inhertiance hierarchy for layers." /></p>
+<p>The only inheritance hierarchy besides the one for Layers is for Projectors and there is simple one projector for each projection system and they all inherit from CMProjector.cs.</p>
+<h2>Current and Future Features </h2>
+<p>Below is a lsit of the existnig features in features we would like to see in a JavaScript-based web map:</p>
+<p>What do we want from a Web-Mapping solution?</p>
+<ul>
+	<li>Layer types:</li>
+	<ul>
+		<li>Point layers:</li>
+		<ul>
+			<li>Standard marks (circle, squares, triangles, stars)</li>
+			<ul>
+				<li>Settable styles, can be different for each feature </li>
+			</ul>
+			<li>Icons from image files </li>
+			<ul>
+				<li>Settable images, can be different for each feature </li>
+			</ul>
+			<li>Data from:</li>
+			<ul>
+				<li>GeoJSON</li>
+				<li>Client-side JavaScript</li>
+			</ul>
+		</ul>
+		<li>Polyline and polygon layers: </li>
+		<ul>
+			<li>Stylize fills and strokes</li>
+			<ul>
+				<li>Settable for all or individual features</li>
+		    </ul>
+			<li>Mouse over and selected styles
+			  <ul>
+			    <li>Settable for all or individual features   </li>
+		      </ul>
+			</li>
+			<li>Data from:</li>
+			<ul>
+			  <li>GeoJSON</li>
+		    </ul>
+		</ul>
+		<li>Raster layers:     </li>
+		<ul>
+		  <li>JPG, PNG</li>
+		  </ul>
+		<li>OpenStreetMap tiles</li>
+		<li>Pyramids of tiles </li>
+		<ul>
+			<li>Vector</li>
+			<li>Raster</li>
+		</ul>
+		</ul>
+	<li>All vector layers:</li>
+	<ul>
+		<li>Override: MouseDown, MouseMove, MouseUp,  others?</li>
+		<li>Info balloons based on attribute</li>
+		<li>Search on attributes -&gt; selection</li>
+		<li>View attributes in a table</li>
+		</ul>
+	<li>All layers:</li>
+	<ul>
+		<li>Zoom to bounds (if bounds available)</li>
+	</ul>
+	<li>&nbsp;Conversion of coordinates between geographic and projected systems</li>
+	<li>GUI
+		<ul>
+			<li>Display of the current spatial reference</li>
+			<li>Informational windows with HTML content</li>
+			<li>Map Panels:
+				<ul>
+					<li>Title bar</li>
+					<li>Tool bar with select and pan tools</li>
+					<li>Footer with credits, coordinates, and spatial reference</li>
+					<li>Layers panel with access to:
+						<ul>
+							<li>Settings: fill and stroke style</li>
+							<li>Zoom to bounds</li>
+							<li>Delete</li>
+						</ul>
+					</li>
+					<li>Background tile selections</li>
+					<li>Easy to replace or remove standard map panels</li>
+				</ul>
+			</li>
+			<li>Mouse for zoom in/out, pan, and mouse wheel for zooming</li>
+			<li>Maps that can flow with HTML content or be resizeable</li>
+			<li>Limit zoom levels and visiable area</li>
+		    <li>Change styles for map elements </li>
+		    <li>Replace map elements with your own  </li>
+		</ul>
+	</li>
+	<li>Override all existing object functions</li>
+	<li>Create new layers and new map elements</li>
+	</ul>
+<p>Extensions?:</p>
+<ul>
+	<li>Correct north arrows</li>
+	<li>Correct scale bars</li>
+	<li>Graticules</li>
+	<li>3D renderings</li>
+	<li>Animations</li>
+	<li>More projections </li>
+	<li>Raster histograms?</li>
+	<li>Editable vector data: points, polylines, polygons (how to make persistent?) </li>
+    <li>Labels from attributes?</li>
+    </ul>
+<p>Alternatives:</p>
+<ul>
+	<li>OpenLayers</li>
+	<ul>
+		<li>Has projections</li>
+	</ul>
+	<li>CanvasMap</li>
+	<ul>
+		<li>Supports UTM, Geographic, and GoogleMercator  projections</li>
+	</ul>
+	<li>&nbsp;Leaflet
+	  <ul>
+	    <li>Easy to get started </li>
+	    </ul>
+	</li>
+    </ul>
+<p>&nbsp;</p>
+<!-- InstanceEndEditable -->
+
+<!-- end main content --></div>
+
+<!-- end main content container --></div>
+
+
+<!-- end main container --></div>
+
+<!-- begin footer container --><div id="footer_container" style="width:100%;height:175px;background-color:#333333;color:#999999">
+
+<!-- begin footer --><div id="footer" style="width:960px;margin:0 auto">
+
+<table width="600px" style="margin-top:20px">
+  <tr>
+    <td width="200px" align="left" valign="top">
+    	<h3>Humboldt State Unviersity</h3>
+        <p></p>
+    </td>
+    <td width="200px" align="left" valign="top">
+    	<h3>Created By Dr. Jim Graham</h3>
+        <p></p>
+    </td>
+    <td width="200px" align="left" valign="top">
+    	<h3>2015</h3>
+        <p></p>
+    </td>
+  </tr>
+</table>
+
+
+<!-- end footer --></div>
+
+<!-- end footer container --></div>
+
+</body>
+
+<!-- InstanceEnd --></html>

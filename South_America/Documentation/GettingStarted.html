@@ -1,0 +1,133 @@
+<!DOCTYPE HTML>
+
+<html><!-- InstanceBegin template="/Templates/Template_Main.dwt" codeOutsideHTMLIsLocked="false" -->
+
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>GSP 470 - Canvas Map</title>
+<!-- InstanceEndEditable -->
+
+<link href="../Includes/canvas_map.css" rel="stylesheet" type="text/css">
+<!-- InstanceBeginEditable name="head" -->
+<!-- InstanceEndEditable -->
+
+</head>
+
+<body>
+    
+<!-- begin main container --><div id="main_container" style="width:100%;overflow:visible">
+
+
+<!-- begin masthead --><div id="masthead" style="width:100%;height:24px;"> 
+
+<!-- content for masthead goes inside masthead div -->
+
+<!-- end masthead --></div>
+
+
+<!-- begin header --><div id="header" style="width:100%;height:100px;">
+
+<!-- content for header goes inside header div -->
+
+    <!-- begin logo --><div id="logo">
+      <a href="../../../index.html"><img src="../Images/CanvasMap_Logo_285w_v2.png" width="285" height="100" alt="Logo"></a>      
+    <!-- end logo --></div>
+
+<!-- end header --></div>
+
+
+<!-- begin main nav container --><div id="main_nav_container" style="width:100%;">
+<!-- begin main nav --><div id="main_nav" style="width:100%">
+	<ul>
+    	<li><a href="CanvasMap.html">Home</a></li>
+        <li><a href="GettingStarted.html">GETTING STARTED</a></li>
+        <li><a href="Tutorials.html">tutorials</a></li>
+        <li><a href="Reference.html">Reference</a></li>
+	</ul>
+<!-- end main nav --></div>
+
+
+
+<!-- end main nav container --></div>
+
+<!-- begin main content container --><div id="main_content_container" style="width:100%">
+
+<!-- begin main content --><div id="content" style="width:960px;margin:0 auto">
+
+<!-- InstanceBeginEditable name="EditRegion3" -->
+<h1> Getting Started</h1>
+<p>CanvasMap is a very flexible and relatively easy to use JavaScript library for publishing interactive and &quot;static&quot; maps on the web.</p>
+<p>This documentation does assume that you are somewhat familiar with HTML,  the DOM, and JavaScript. It also helps to have experience with one of the browser based debuggers and working with classes in JavaScript.</p>
+<h2>You Don't Have to Have a Web Server</h2>
+<p>1. If you have a web server</p>
+<p>If you have a web server setup and ready to go, you can use all the CanvasMap samples and tutorials as they are. Note that most modern operating systems, including MS-Windows, allow you to setup a web server on a regular workstation and develop web applications without having a full web server with a static IP address. On MS-Windows, use the web to find the latest information on installing Internet Information Server (IIS) and then put the CanvasMap files into a folder in the &quot;C:/inetpub/wwwroot&quot; folder and you'll be able to access your files with a URL that looks something like &quot;http://localhost/CanvasMap/SampleMap.html&quot;.</p>
+<p>2. If you don't have a web server</p>
+<p>If you don't have a web server ready to go, do not worry, the only change you have to make to your code is you have to add a single line to each of your GeoJSON files. We recommend adding a line that appears like:</p>
+<ul>
+	<li>var FileName=</li>
+	</ul>
+<p>Where &quot;FileName&quot; is the name of the file. This turns you regular GeoJSON file into a big JavaScript object stored in the variable named &quot;FileName&quot;. Then, all you have to do is specify &quot;FileName&quot; in the SetData(FileName) function call when you setup your layers instead of using SetURL(URL).</p>
+<p>The first tutorial uses data that can operate without a web server but from there you'll need to make the change noted above.</p>
+<h2>Getting CanvasMap</h2>
+<p>First, you'll want to download the CanvasMap &quot;Zip&quot; file from the list below. You'll usually want to get the release that is at the top of the list which is also the latest reelase.</p>
+<ul>
+	<li><a href="../../CanvasMap_B_3.zip">CanvasMap B3 - </a>Includes additional information in the &quot;Reference&quot; section of the documenation  and corrections in the tutorials. Also fixed the jQuery error.</li>
+	</ul>
+<p>Then, decompress it onto a folder. You'll find a number of files and folders. The files are different maps and are part of the tutorials. The folders are as follows:</p>
+<ul>
+	<li>Documentation: Contains this documentation</li>
+	<li>GISData: Contains data for the tutorials</li>
+	<li>Images: Contains images for CanvasMap</li>
+	<li>Includes: These are the JavaScript files and CSS files that make up CanvasMap</li>
+	</ul>
+<p>You can try the sample maps below and all of them, except the first one, should work if you are on a web server. If you are running localling, the maps that use data from a URL on a local server will not work until changes are made.</p>
+<ul>
+	<li><a href="../Map_Simplest_SetData.html">Simple Map to Set Data from a Local File</a> - only uses local data. must open this as a file (double click on it in your file explorer) </li>
+	<li><a href="../Map_Simplest_GetURL.html">Simple Map to Get Data From a URL</a> - this and the other examples here, require a web server (e.g. &quot;localhost&quot; or a domain name). </li>
+	<li><a href="../Map_WebMercator_Resizable.html">Resizable Map </a>- a map that resizes to fit the browser window and also has selectable backgrounds</li>
+	<li><a href="../Map_GooleMercator_Tiles.html">A map with pyramided data</a> - note that the pyramided data is quite large so this demo only runs from our web server. You can create your own pyramided data withe BlueSpray.</li>
+	<li><a href="../Map_ProjectToWebMercator.html">Map to Project Geographic Data to Google Mercator</a></li>
+	</ul>
+<p>When you have CanvasMap installed and the samples above working, move on to the &quot;Tutorials&quot; page.</p>
+<p>&nbsp;</p>
+<!-- InstanceEndEditable -->
+
+<!-- end main content --></div>
+
+<!-- end main content container --></div>
+
+
+<!-- end main container --></div>
+
+<!-- begin footer container --><div id="footer_container" style="width:100%;height:175px;background-color:#333333;color:#999999">
+
+<!-- begin footer --><div id="footer" style="width:960px;margin:0 auto">
+
+<table width="600px" style="margin-top:20px">
+  <tr>
+    <td width="200px" align="left" valign="top">
+    	<h3>Humboldt State Unviersity</h3>
+        <p></p>
+    </td>
+    <td width="200px" align="left" valign="top">
+    	<h3>Created By Dr. Jim Graham</h3>
+        <p></p>
+    </td>
+    <td width="200px" align="left" valign="top">
+    	<h3>2015</h3>
+        <p></p>
+    </td>
+  </tr>
+</table>
+
+
+<!-- end footer --></div>
+
+<!-- end footer container --></div>
+
+</body>
+
+<!-- InstanceEnd --></html>

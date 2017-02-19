@@ -1,0 +1,143 @@
+<!DOCTYPE HTML>
+
+<html><!-- InstanceBegin template="/Templates/Template_Main.dwt" codeOutsideHTMLIsLocked="false" -->
+
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>GSP 470 - Canvas Map</title>
+<!-- InstanceEndEditable -->
+
+<link href="../Includes/canvas_map.css" rel="stylesheet" type="text/css">
+<!-- InstanceBeginEditable name="head" -->
+<!-- InstanceEndEditable -->
+
+</head>
+
+<body>
+    
+<!-- begin main container --><div id="main_container" style="width:100%;overflow:visible">
+
+
+<!-- begin masthead --><div id="masthead" style="width:100%;height:24px;"> 
+
+<!-- content for masthead goes inside masthead div -->
+
+<!-- end masthead --></div>
+
+
+<!-- begin header --><div id="header" style="width:100%;height:100px;">
+
+<!-- content for header goes inside header div -->
+
+    <!-- begin logo --><div id="logo">
+      <a href="../../../index.html"><img src="../Images/CanvasMap_Logo_285w_v2.png" width="285" height="100" alt="Logo"></a>      
+    <!-- end logo --></div>
+
+<!-- end header --></div>
+
+
+<!-- begin main nav container --><div id="main_nav_container" style="width:100%;">
+<!-- begin main nav --><div id="main_nav" style="width:100%">
+	<ul>
+    	<li><a href="CanvasMap.html">Home</a></li>
+        <li><a href="GettingStarted.html">GETTING STARTED</a></li>
+        <li><a href="Tutorials.html">tutorials</a></li>
+        <li><a href="Reference.html">Reference</a></li>
+	</ul>
+<!-- end main nav --></div>
+
+
+
+<!-- end main nav container --></div>
+
+<!-- begin main content container --><div id="main_content_container" style="width:100%">
+
+<!-- begin main content --><div id="content" style="width:960px;margin:0 auto">
+
+<!-- InstanceBeginEditable name="EditRegion3" -->
+<h2>Tutorial: How The Code Works</h2>
+<p>There is an example file called &quot;Map_Simple.html&quot; that demonstrates the following steps to create a simple map. </p>
+<ul>
+	<li>Create a new HTML page with a &quot;head&quot; and &quot;body&quot; section </li>
+	<li>Import the JavaScript (&quot;js&quot;) files you want to use  in the &quot;head&quot; section. This will include:
+		<ul>
+			<li>CanvasMap.js</li>
+			<li>CMView.js</li>
+			<li>CMScene.js</li>
+			<li>CMLayer.js</li>
+			<li>Additional layers for those you wish to support</li>
+			<li>JavaScript for jQuery</li>
+			<li>JavaScript files for jQuery UI </li>
+		</ul>
+	</li>
+	<li>Add &quot;div&quot; tags for any other mapping elements you desire. Supported elements are:
+		<ul>
+			<li>Canvas element for the map</li>
+			<li>Div element for a LayerList</li>
+			<li>Div element for Information </li>
+		</ul>
+	</li>
+	<li>Create a &quot;script&quot; tag in your &quot;head&quot; section and add the following:
+		<ul>
+			<li>A global variable for the CanvasMap object</li>
+			<li>An &quot;initialize()&quot; function that includes the following:
+				<ul>
+					<li>Create the CanvasMap object</li>
+					<li>Set the IDs for your elements into the CanvasMap object </li>
+				</ul>
+			</li>
+			<ul>
+				<li>Call CanvasMap.Initialize()</li>
+				<li>Setup the bounds you wish the map to be for and call SetMaxBounds().</li>
+				<li>You can also call ZoomToBounds() at this point to center the map on the desired area </li>
+				<li>Add the layers you desire</li>
+				<li>Call CanvasMap.StartMap()</li>
+				</ul>
+			<p>&nbsp;</p>
+		</ul>
+	</li>
+</ul>
+<p>&nbsp;</p>
+
+
+<!-- InstanceEndEditable -->
+
+<!-- end main content --></div>
+
+<!-- end main content container --></div>
+
+
+<!-- end main container --></div>
+
+<!-- begin footer container --><div id="footer_container" style="width:100%;height:175px;background-color:#333333;color:#999999">
+
+<!-- begin footer --><div id="footer" style="width:960px;margin:0 auto">
+
+<table width="600px" style="margin-top:20px">
+  <tr>
+    <td width="200px" align="left" valign="top">
+    	<h3>Humboldt State Unviersity</h3>
+        <p></p>
+    </td>
+    <td width="200px" align="left" valign="top">
+    	<h3>Created By Dr. Jim Graham</h3>
+        <p></p>
+    </td>
+    <td width="200px" align="left" valign="top">
+    	<h3>2015</h3>
+        <p></p>
+    </td>
+  </tr>
+</table>
+
+
+<!-- end footer --></div>
+
+<!-- end footer container --></div>
+
+</body>
+
+<!-- InstanceEnd --></html>

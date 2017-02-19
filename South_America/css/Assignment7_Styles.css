@@ -1,0 +1,467 @@
+/***************************************** Font Styles *****************************************/
+@charset "utf-8";
+
+@font-face { font-family: aqua; src: url('../Fonts/aqua.ttf'); } 
+@font-face { font-family: Stellar-Regular; src: url('../Fonts/Stellar-Regular.otf'); }
+@font-face { font-family: Stellar-Bold; src: url('../Fonts/Stellar-Bold.otf'); }
+@font-face { font-family: Stellar-light; src: url('../Fonts/Stellar-light.otf'); }
+/***************************************** Global Element Styles *****************************************/
+body {
+	margin: 0;
+	padding: 0;
+	font-family: "Century Gothic", Arial, "Arial Narrow", sans-serif;
+	font-size: 14px;
+	background-color: #000000;
+	background-image: url(../Images/Machu-Picchu-Pictures.jpg);
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-position: center;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;		
+
+}
+h1, h2, h3, h4, h5, h6, p {
+	margin-top: 0;	 /* removing the top margin gets around an issue where margins can escape from their containing div. The remaining bottom margin will hold it away from any elements that follow. */
+
+}
+
+h2 {
+	border-bottom: solid 1px black;
+}
+.h1Title {
+	color: #FFFFFF;
+	font-size: 20px;
+	font-weight: bolder;
+}
+.h3Styles {
+	text-align: center;
+	font-weight: lighter;
+	font-size: 13px;
+}
+.FigureCaption {
+	color: #FFFFFF; 
+	text-align: center;
+	font-weight: lighter;
+	padding-bottom: 25px;
+}
+.pStyles {
+	color: #FFFFFF;
+}
+th {
+	color: #FFFFFF;
+}
+td {
+	color: #FFFFFF;
+}
+.tdBackground {
+	background-color: rgba(153, 153, 153, 0.7);
+}
+.thBackground {
+	background-color:  rgba(115, 115, 115, 0.7);
+}
+a.active {
+	color: #FFFFFF;
+}
+/***************************************** Header Styles *****************************************/
+#masthead {
+	color: #FFFFFF;
+	background-color: #001a00;
+}
+#header {
+}
+
+#main_container {
+	width: 100%;
+	height: 100%;
+	overflow:visible;
+}
+.sub-container {
+	margin: 0 auto; 
+	width: 960px; 
+	background-color: rgba(89,89,89,0.8);
+}
+.sub-container2 {
+	margin: 0 auto; 
+	width: 100%; 
+}
+#main_nav_container {
+	background-color: #EFEFEF;	
+} 
+
+/***************************************** Nav-Bar Styles *****************************************/
+.master_main_nav {
+	width: 100%; 
+/* 	height: 52px; */
+	background-color: rgba(89,89,89,0.8);
+	border-top: 1px solid #FFFFFF;
+	border-bottom: 1px solid #FFFFFF;
+}
+#mainnav {
+}
+
+#main_nav ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+#main_nav a {
+	width: 25%;
+	font-size: 18px;
+	display: block;
+	float: left;	
+	text-align: center;
+	/* background-color: #EFEFEF; */
+	color: #808080;
+	/* text-transform: uppercase; */
+	font-weight: bold;
+	padding: 15px 0px 15px 0px;
+	border-top: 1px solid #FFFFFF;
+	border-bottom: 1px solid #FFFFFF;
+/* 	border-bottom: 1px solid #FFFFFF; */
+}
+
+#main_nav a.LinkActive {
+	color: #FFFFFF;
+}
+
+#main_nav a:hover, #main_nav a:focus, #main_nav {
+	text-decoration: none;
+	color: #FFFFFF;
+	/* border-bottom: 1px solid #FFFFFF; */
+	transition: 0.2s ease;
+}
+
+#main_nav2 ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+#main_nav2 a {
+	width: 25%;
+	font-size: 18px;
+	display: block;
+	float: left;	
+	text-align: center;
+	/* background-color: #EFEFEF; */
+	color: #808080;
+	/* text-transform: uppercase; */
+	font-weight: bold;
+	padding: 15px 0px 15px 0px;
+/* 	border-bottom: 1px solid #FFFFFF; */
+}
+
+#main_nav2 a.LinkActive {
+	color: #FFFFFF;
+}
+
+#main_nav2 a:hover, #main_nav a:focus, #main_nav {
+	text-decoration: none;
+	color: #FFFFFF;
+	/* border-bottom: 1px solid #FFFFFF; */
+	transition: 0.2s ease;
+}
+
+#margin_top {
+	margin-top: 30px;
+}
+/***************************************** Table Styles *****************************************/
+th {
+	color: #FFFFFF;
+}
+td {
+	color: #FFFFFF;
+}
+.thBackground {
+	font-size: 14px;
+	background-color:  rgba(51,51,51, 0.8);
+	font-family: aqua;
+	text-transform: uppercase;
+}
+.tdBackground {
+	background-color: rgba(179,179,179, 0.8);
+	font-family: Stellar-light;
+}
+.MatrixColor {
+	color: #262626;
+	height: 10px;
+}
+ #searchbox input[type="text"] {
+	border: 1px solid #595959;
+	font-size: 12px;
+	color: #d9d9d9;
+	width: 150px;
+	padding: 8px 15px 8px 8px;
+	border-radius: 5px 0px 0px 5px;
+	background-color: rgba(89, 89, 89, 0.7);
+	font-family: 'Lato', Calibri, Arial, sans-serif;
+}
+ #DDSearch input[type="text"] {
+	border: 1px solid #595959;
+	font-size: 12px;
+	color: #d9d9d9;
+	width: 63px;
+	padding: 8px 15px 8px 8px;
+	border-radius: 0px 0px 0px 0px;
+	background-color: rgba(89, 89, 89, 0.7);
+	font-family: 'Lato', Calibri, Arial, sans-serif;
+}
+ #DMSSearch input[type="text"] {
+	border: 1px solid #595959;
+	font-size: 12px;
+	color: #d9d9d9;
+	width: 33px;
+	padding: 8px 15px 8px 8px;
+	border-radius: 0px 0px 0px 0px;
+	background-color: rgba(89, 89, 89, 0.7);
+	font-family: 'Lato', Calibri, Arial, sans-serif;
+}
+ #CoorSearch input[type="text"] {
+	border: 1px solid #595959;
+	font-size: 12px;
+	color: #d9d9d9;
+	width: 40px;
+	padding: 8px 15px 8px 8px;
+	border-radius: 5px 5px 5px 5px;
+	background-color: rgba(89, 89, 89, 0.7);
+	font-family: 'Lato', Calibri, Arial, sans-serif;
+}
+#button-submit {
+	background: #FFF;
+	border: 1px solid #595959;
+	padding: 8px 10px 8px 8px;
+	width: 65px;
+	cursor: pointer;
+	font-family: 'Lato', Calibri, Arial, sans-serif;
+	font-size: 12px;
+	background-color: rgba(153, 153, 153, 0.7);
+	color: #FFFFFF;
+	border-radius: 0px 5px 5px 0px;
+}
+#button-submit:hover {
+	background-color: rgba(140, 140, 140, 0.7);
+}
+#button-submit:active {
+	background-color: rgba(140, 140, 140, 0.7);
+}
+#button-submit::-moz-focus-inner {
+	border: 0;
+}
+#scalar-submit {
+	background: #FFF;
+	border: 1px solid #595959;
+	padding: 8px 10px 8px 8px;
+	width: 65px;
+	cursor: pointer;
+	font-family: 'Lato', Calibri, Arial, sans-serif;
+	font-size: 12px;
+	background-color: rgba(153, 153, 153, 0.7);
+	color: #FFFFFF;
+	border-radius: 5px 5px 5px 5px;
+}
+#scalar-submit:hover {
+	background-color: rgba(140, 140, 140, 0.7);
+}
+#scalar-submit:active {
+	background-color: rgba(140, 140, 140, 0.7);
+}
+#scalar-submit::-moz-focus-inner {
+	border: 0;
+}
+.ScalarInputs {
+	color: #FFFFFF;
+	border: 1px solid #595959;
+	font-size: 12px;
+	color: #d9d9d9;
+	width: 15px;
+	margin-left: 2px;
+	margin-right: 2px;
+	margin-bottom: 2px;
+	padding: 8px 15px 8px 8px;
+	border-radius: 5px 5px 5px 5px;	
+	background-color: rgba(89, 89, 89, 0.7);
+	font-family: 'Lato', Calibri, Arial, sans-serif;
+}
+.Results {
+	border: 1px solid #595959;
+	font-size: 12px;
+	color: #d9d9d9;
+	width: 216px;
+	height: 13px;
+	margin: 0 auto;
+	text-align: center;
+	padding: 8px 15px 8px 8px;
+	border-radius: 5px 5px 5px 5px;
+	background-color: rgba(89, 89, 89, 0.7);
+	font-family: 'Lato', Calibri, Arial, sans-serif;	
+}
+.CoorResults {
+	border: 1px solid #595959;
+	font-size: 12px;
+	color: #d9d9d9;
+	width: 271px;
+	height: 13px;
+	margin: 0 auto;
+	text-align: center;
+	padding: 8px 15px 8px 8px;
+	border-radius: 5px 5px 5px 5px;
+	background-color: rgba(89, 89, 89, 0.7);
+	font-family: 'Lato', Calibri, Arial, sans-serif;	
+}
+
+/***************************************** Country Results Styles *****************************************/
+.CountryResults {
+	width: 360px; 
+	height: 410px; 
+	background-color: rgba(38, 38, 38, 0.8); 
+	border: 1px solid #FFFFFF; 
+	border-radius: 5px;
+	color: #FFFFFF;
+	text-align: center;
+	z-index: 500; 
+	position: relative; 
+	float: right; 
+	top: 70px;	
+	right: 10px;
+}
+.SAInfo {
+	color: #FFFFFF;
+}
+.TableStyles {
+	text-align: center;
+	margin: 0 auto;
+}
+.InfoContainer {
+	position: relative;
+	top: 10px;
+	width: 350px;
+}
+.thBackground1 {
+	font-size: 12px;
+	background-color:  rgba(51,51,51, 0.8);
+	font-family: aqua;
+	text-transform: uppercase;
+}
+.tdBackground1 {
+	background-color: rgba(179,179,179, 0.8);
+	font-family: Stellar-light;
+}
+/***************************************** Links Styles *****************************************/
+a:link {
+	color: #FFFFFF; 
+/* 	background-color:transparent;  */
+	text-decoration:none
+}
+
+a:visited {
+/* 	color: #2A00AA; 
+	background-color:transparent;  */
+	text-decoration:none
+}
+
+a:hover, a:active, a:focus {
+	color: #FFFFFF; 
+	/* background-color:transparent; */ 
+	text-decoration:underline
+}
+
+.content {
+	padding: 30px 25px 40px 25px;	
+}
+
+#content_wrapper {
+	width: 960px;
+	margin: 0 auto;
+	background-color: #FFF;
+	position: relative;
+	top: 140px;
+	-webkit-box-shadow: 0px 0px 0px 0px;
+	box-shadow: 0px 2px 7px -3px;
+	
+}	
+/***************************************** Footer Styles *****************************************/
+.Master_Footer {
+	width: 100%;
+	background-color: #001a00; 
+}
+#footer_container {
+	width: 960px;  
+	margin:0 auto; 
+	background-color: #001a00; 
+	color: #999999;
+}
+#footer_container2 {
+	width: 100%;  
+	margin:0 auto; 
+	background-color: #001a00; 
+	color: #999999;
+}
+#footer {
+	width: 100%;
+	height: 48px;
+	margin: 0 auto;
+}
+#footer2 {
+	width: 960px;
+	height: 48px;
+	margin: 0 auto;
+}
+#footerimage {
+	margin: 0px;
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
+	background-color: #ffffff;
+	padding-top: 10px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+}
+
+#footer_p {
+	color: #CCC;
+	line-height: 2px;
+	margin: 15px;
+}
+
+#footerwrapper {
+	background-color: #CCC;
+	padding-top: 10px;
+}
+
+#footer ul {
+	list-style-type: none;
+	font-size: 12px;
+	font-weight: normal;
+	color: #CCC;
+}
+
+#footer li {
+	font-weight: normal;
+	color: #CCC;
+}
+
+#footer a, #footer a:visited {
+	font-weight: normal;
+	color: #CCC;
+	text-decoration: none;
+}
+
+#footer a:hover, #footer a:active, #footer a:focus {
+	color: #F60;
+	text-decoration: underline;
+}
+
+
+/* img {
+	margin: 0 auto;
+} */
+
+/* ~~ Element/tag selectors ~~ */
+ul, ol, dl { /* Due to variations between browsers, it's best practices to zero padding and margin on lists. For consistency, you can either specify the amounts you want here, or on the list items (LI, DT, DD) they contain. Remember that what you do here will cascade to the .nav list unless you write a more specific selector. */
+}
+

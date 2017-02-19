@@ -1,0 +1,116 @@
+<!DOCTYPE HTML>
+
+<html><!-- InstanceBegin template="/Templates/Template_Main.dwt" codeOutsideHTMLIsLocked="false" -->
+
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>GSP 470 - Canvas Map</title>
+<!-- InstanceEndEditable -->
+
+<link href="../Includes/canvas_map.css" rel="stylesheet" type="text/css">
+<!-- InstanceBeginEditable name="head" -->
+<!-- InstanceEndEditable -->
+
+</head>
+
+<body>
+    
+<!-- begin main container --><div id="main_container" style="width:100%;overflow:visible">
+
+
+<!-- begin masthead --><div id="masthead" style="width:100%;height:24px;"> 
+
+<!-- content for masthead goes inside masthead div -->
+
+<!-- end masthead --></div>
+
+
+<!-- begin header --><div id="header" style="width:100%;height:100px;">
+
+<!-- content for header goes inside header div -->
+
+    <!-- begin logo --><div id="logo">
+      <a href="../../../index.html"><img src="../Images/CanvasMap_Logo_285w_v2.png" width="285" height="100" alt="Logo"></a>      
+    <!-- end logo --></div>
+
+<!-- end header --></div>
+
+
+<!-- begin main nav container --><div id="main_nav_container" style="width:100%;">
+<!-- begin main nav --><div id="main_nav" style="width:100%">
+	<ul>
+    	<li><a href="CanvasMap.html">Home</a></li>
+        <li><a href="GettingStarted.html">GETTING STARTED</a></li>
+        <li><a href="Tutorials.html">tutorials</a></li>
+        <li><a href="Reference.html">Reference</a></li>
+	</ul>
+<!-- end main nav --></div>
+
+
+
+<!-- end main nav container --></div>
+
+<!-- begin main content container --><div id="main_content_container" style="width:100%">
+
+<!-- begin main content --><div id="content" style="width:960px;margin:0 auto">
+
+<!-- InstanceBeginEditable name="EditRegion3" -->
+<h1>Simple Static Map</h1>
+<p>The default map is a resizable CanvasMap provides a lot of elements by default. You can also turn off most of these elements and create simple static maps to add to a web page.</p>
+<p><a href="../Map_FlowingMap_Minimal_GeoJSON.html">Simple Static Map  </a></p>
+<p>The first step is to turn off all the map elements that you don't want to display. Note that this must come before the &quot;Initialize()&quot; call to CanvasMap.</p>
+
+<pre>	TheCanvasMap.SetElement(CanvasMap.MAP_HEADER,null); // turn off the header with the map title<br>	TheCanvasMap.SetElement(CanvasMap.TOOL_CONTAINER,null); // turn off the tool bar below the title<br>	TheCanvasMap.SetElement(CanvasMap.NAVIGATION,null); // turn off the nagivation controls in the map <br>	TheCanvasMap.SetElement(CanvasMap.TAB_CONTAINER,null); // turn off the tab controls to the upper right of the map<br>	TheCanvasMap.SetElement(CanvasMap.LAYER_LIST,null); // hide the list of layers that is below the tab controls<br>	TheCanvasMap.SetElement(CanvasMap.BACKGROUND_LIST,null); // hide the background list<br>	TheCanvasMap.SetElement(CanvasMap.SEARCH_PANEL,null); // hide the search panel<br>	TheCanvasMap.SetElement(CanvasMap.MAP_FOOTER,null); // hide the map footer at the bottom of the map
+</pre>
+
+<p>Then, we can turn off the mouse events so the user can't move the map. </p>
+<pre>// initialize canvas map
+TheCanvasMap.Initialize(false); // turn off mouse events
+</pre>
+<p>Finally, we will zoom the map to a specific area.</p>
+<pre>TheCanvasMap.ZoomTo(-15); // set the zoom level to fit out area of interest<br>TheCanvasMap.SetRefCenter(13000000,-25000000); // set the center of the map<br></pre>
+<p>You'll want to play around a bit with these values to see how they effect the map. You can get the coordinates for the center of the map by loading data into a GIS application (like BlueSpray) and then moving the mouse to the area you want at the center of the map and recording the corodinate for that area. Then, put those values into the code above.<br>
+</p>
+<p></p>
+<p> </p>
+<!-- InstanceEndEditable -->
+
+<!-- end main content --></div>
+
+<!-- end main content container --></div>
+
+
+<!-- end main container --></div>
+
+<!-- begin footer container --><div id="footer_container" style="width:100%;height:175px;background-color:#333333;color:#999999">
+
+<!-- begin footer --><div id="footer" style="width:960px;margin:0 auto">
+
+<table width="600px" style="margin-top:20px">
+  <tr>
+    <td width="200px" align="left" valign="top">
+    	<h3>Humboldt State Unviersity</h3>
+        <p></p>
+    </td>
+    <td width="200px" align="left" valign="top">
+    	<h3>Created By Dr. Jim Graham</h3>
+        <p></p>
+    </td>
+    <td width="200px" align="left" valign="top">
+    	<h3>2015</h3>
+        <p></p>
+    </td>
+  </tr>
+</table>
+
+
+<!-- end footer --></div>
+
+<!-- end footer container --></div>
+
+</body>
+
+<!-- InstanceEnd --></html>

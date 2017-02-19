@@ -1,0 +1,1200 @@
+<!DOCTYPE HTML>
+
+<html><!-- InstanceBegin template="/Templates/Template_Main.dwt" codeOutsideHTMLIsLocked="false" -->
+
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>GSP 470 - Canvas Map</title>
+<!-- InstanceEndEditable -->
+
+<link href="../Includes/canvas_map.css" rel="stylesheet" type="text/css">
+<!-- InstanceBeginEditable name="head" --><!-- InstanceEndEditable -->
+
+</head>
+
+<body>
+    
+<!-- begin main container --><div id="main_container" style="width:100%;overflow:visible">
+
+
+<!-- begin masthead --><div id="masthead" style="width:100%;height:24px;"> 
+
+<!-- content for masthead goes inside masthead div -->
+
+<!-- end masthead --></div>
+
+
+<!-- begin header --><div id="header" style="width:100%;height:100px;">
+
+<!-- content for header goes inside header div -->
+
+    <!-- begin logo --><div id="logo">
+      <a href="../../../index.html"><img src="../Images/CanvasMap_Logo_285w_v2.png" width="285" height="100" alt="Logo"></a>      
+    <!-- end logo --></div>
+
+<!-- end header --></div>
+
+
+<!-- begin main nav container --><div id="main_nav_container" style="width:100%;">
+<!-- begin main nav --><div id="main_nav" style="width:100%">
+	<ul>
+    	<li><a href="CanvasMap.html">Home</a></li>
+        <li><a href="GettingStarted.html">GETTING STARTED</a></li>
+        <li><a href="Tutorials.html">tutorials</a></li>
+        <li><a href="Reference.html">Reference</a></li>
+	</ul>
+<!-- end main nav --></div>
+
+
+
+<!-- end main nav container --></div>
+
+<!-- begin main content container --><div id="main_content_container" style="width:100%">
+
+<!-- begin main content --><div id="content" style="width:960px;margin:0 auto">
+
+<!-- InstanceBeginEditable name="EditRegion3" -->
+
+<p>&nbsp;</p>
+<h1><a href="Design.html"></a>Reference Material</h1>
+<p>Below is reference material on how CanvasMap was designed and more technical details.</p>
+<h2>Design</h2>
+<h3>Overall Design</h3>
+<p>As you've already seen, CanvasMap relies upon an HTML page that includes:</p>
+<ul>
+	<li>Includes for JavaScript files containing the CanvasMap code</li>
+	<li>CSS file(s) for CanvasMap styleing</li>
+	<li>&quot;DIV&quot; elements in the HTML for the CanvasMap(s)</li>
+	</ul>
+<p>The CSS file &quot;CanvasMap.css&quot; contains the style information for all of CanvasMap and the styles are named based on the names of the elements in CanvasMap (see below for a full list of the elements). The JavaScript files are the bulk of the CanvasMap code and are described below.</p>
+<h3>JavaScript Classes</h3>
+<p>CanvasMap has been implemented with JavaScript object-oreinted design. This makes the design very flexible and makes it very easy for you to change and extend it's capabilities. Before proceeding, it is recommended that you have some knowledge of object-oreinted programming.</p>
+<p>The figure below shows how CanvasMap was designed. All the JavaScript objects are contained within an overall CanvasMap object. This is the primary object to use. The CanvasMap object then contains a &quot;Scene&quot; which contains &quot;Layers&quot;. The Scene can be thought of as a scene or area on the ground and is the same as a Scene in BlueSpray or a &quot;Data Frame&quot; in ArcGIS. The layers contain the actual spatial data. There can be a huge variety of types of layers and you are welcome to create your own. The layers are linked to their entries in the &quot;Layer List&quot; called &quot;Layers Element&quot;. The Scene also contains the &quot;Views&quot; that the Scene appears in. The Views are linked to the HTML Canvas element that they will draw into. There are also a variety of support classes for putting up JavaScript &quot;Dialog Boxes&quot;, projecting data, and other utility functions.</p>
+<p><img src="Hierarchy.png" alt="The aggregation hierarchy for CanvasMap" /></p>
+<h3>Mouse Events</h3>
+<p>The main mouse events (mouse down, mouse up, mouse move) are overriden in CanvasMap which then calls the view, which calls the Scene, which then calls the layers:</p>
+<ol>
+	<li>CanvasMap overrides the mouse events with MouseDown, MouseUp, and MouseMove functions.
+		<ol>
+			<li>If the event is not used by CanvasMap (i.e. the user is not dragging the contents of the map) then the View's mouse event function of the same name is called.</li>
+		  </ol>
+	</li>
+	<li>The View converts the coordinates of the mouse cursor to reference units (map units) and then call's the Scene's mouse event function of the same name with this coordinate.</li>
+	<li>The Scene calls all the layers mouse event function until one of the layers returns value of &quot;true&quot; for &quot;Used&quot; (i.e. the layer has used the mouse event and other layers should not use it).</li>
+	<li>The layers typically check if the mouse event was inside one of their features. If so, the layer takes apprpriate action like putting up an information window and returns &quot;true&quot; to keep other layers from using the event. Otherwise, the layer returns &quot;false&quot;.</li>
+	</ol>
+<p>The <a href="Design.html">Design Details</a> page contains additional information on the design.</p>
+<h1>Class Reference</h1>
+<p>Below is a reference for each of the classes in CanvasMap. This includes the &quot;public&quot; functions within each of the classes. There are other functions that you can call but be warned that they may not be supported in the future. All classes in CanvasMap, except CanvasMap itself, are prefixed with &quot;CM&quot; to avoid name collision with other libraries.</p>
+<h2>CanvasMap</h2>
+<p>CanvasMap is the main class for the library and integrates together a MapHeader, ToolContainer, CanvasContainer, MapFooter, and a LayerList.</p>
+<h3>Elements in a CanvasMap</h3>
+<ul>
+	<li>CanvasMap - main object for each map on a page
+		<ul>
+			<li>TheScene - contains the layers
+				<ul>
+					<li>TheLayers</li>
+				</ul>
+			</li>
+			<li>TheView - the veiw for the scene </li>
+		    <li>Elements - the other visible elements (divs) in the canvas map </li>
+		</ul>
+	</li>
+	</ul>
+<h3>Index Definitions</h3>
+<p>Below are definitions for accessing the elements in CanvasMap</p>
+<p>Note: Indexes are used to speed up access to the elements instead of using &quot;getElementByID()&quot; because getElementByID() can take quite a bit of time when used on complex web pages.</p>
+<table width="100%" border="2" cellspacing="0" cellpadding="4">
+	<tr>
+		<td>CanvasMap.MAP_CONTAINER</td>
+		<td>Overall container for the entire CanvasMap </td>
+	</tr>
+	<tr>
+		<td>CanvasMap.MAP_HEADER</td>
+		<td>Contains the map title </td>
+	</tr>
+	<tr>
+		<td>CanvasMap.TOOL_CONTAINER</td>
+		<td>Contains the &quot;ToolTitle&quot; and tools </td>
+	</tr>
+	<tr>
+		<td>CanvasMap.TOOL_ADD</td>
+		<td>A tool to add new data to the map </td>
+	</tr>
+	<tr>
+		<td>CanvasMap.TOOL_EDIT</td>
+		<td>A tool to edit existing data </td>
+	</tr>
+	<tr>
+		<td>CanvasMap.TOOL_INFO</td>
+		<td>A tool to provide information on data in the map (an &quot;i&quot; or arrow) </td>
+	</tr>
+	<tr>
+		<td>CanvasMap.TOOL_PAN</td>
+		<td>A tool to pan the map (the hand) </td>
+	</tr>
+	<tr>
+		<td>CanvasMap.CANVAS_CONTAINER</td>
+		<td>The DIV tag that surrounds the main canvas that displays the map data </td>
+	</tr>
+	<tr>
+		<td>CanvasMap.CANVAS</td>
+		<td>The canvas element that displays the map data </td>
+	</tr>
+	<tr>
+		<td>CanvasMap.LAYER_LIST</td>
+		<td>The list of layers that are available for the map </td>
+	</tr>
+	<tr>
+	  <td>CanvasMap.BACKGROUND_LIST</td>
+	  <td>Contains the list of available backgrounds </td>
+	  </tr>
+	<tr>
+	  <td>CanvasMap.SEARCH_PANEL</td>
+	  <td>The panel to perform text searches on attributes </td>
+	  </tr>
+	<tr>
+	  <td>CanvasMap.TAB_CONTAINER</td>
+	  <td>The DIV element that contains the tabs above the Layer List, Background List, and Search Panel </td>
+	  </tr>
+	<tr>
+		<td>CanvasMap.MAP_FOOTER</td>
+		<td>The footer at the bottom of the map that can show the SR, coordinate, and other information </td>
+	</tr>
+	<tr>
+		<td>CanvasMap.MAP_COORDINATES</td>
+		<td>The current coordinate under the mouse cursor </td>
+	</tr>
+	<tr>
+		<td>CanvasMap.MAP_SRS</td>
+		<td>Contains the spatial reference system for the map </td>
+	</tr>
+	<tr>
+		<td>CanvasMap.MAP_CREDITS</td>
+		<td>Contains the credits for the map (user set) </td>
+	</tr>
+	<tr>
+		<td>CanvasMap.NAVIGATION</td>
+		<td>The navigation controls (zoom in, zoom out, zoom to all) </td>
+	</tr>
+	<tr>
+		<td>CanvasMap.TOOLS_TITLE</td>
+		<td>The title in front of the tools. </td>
+	</tr>
+</table>
+<p>&nbsp;</p>
+<h3>Coordinate Unit Defintions</h3>
+<p>The following definitions are used to specify the units for coordinates that are displayed in the footer and in scale bars. Note that conversions to coordinates that are in a different spatial reference than the map can only be done if a projector is provided.</p>
+<ul>
+  <li>CanvasMap.COORDINATES_UNITS_DD</li>
+  <li>CanvasMap.COORDINATES_UNITS_DMS</li>
+  <li>CanvasMap.COORDINATES_UNITS_METERS</li>
+  <li>CanvasMap.COORDINATES_UNITS_FEET  </li>
+  </ul>
+<h3>Functions </h3>
+<p>Below is a description of each of the functions available in CanvasMap. </p>
+<table width="100%" border="1" cellspacing="0" cellpadding="2">
+	<tr>
+		<th>Function</th>
+		<th>Description</th>
+	</tr>
+	<tr>
+		<td><strong>Constructors</strong></td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>CanvasMap()</td>
+		<td>Creates a new canvas map object</td>
+	</tr>
+	<tr>
+	  <td>&nbsp;</td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+	  <td><strong>Overriden before Initialize() </strong></td>
+	  <td>These functions could be overriden before Initialize() is called (but rarely would be) </td>
+	  </tr>
+	<tr>
+	  <td>MouseWheel()</td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+	  <td>ClickOnTool(NewTool)</td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td><strong>Called before Initialize() </strong></td>
+		<td>These functions should be called to set parameters before Initialize() is called.</td>
+	</tr>
+	<tr>
+      <td>SetImageFolder(PathToImages)</td>
+	  <td>Sets the path to the images folder if it has changed.</td>
+	  </tr>
+	<tr>
+	  <td>SetCoordinateUnits(NewUnits)</td>
+	  <td>Sets the coordinate units displayed in the footer </td>
+	  </tr>
+	<tr>
+	  <td>&nbsp;</td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+		<td>SetElement(ElementIndex,NewElement)</td>
+		<td>Change the element before it is added to CanvasMap</td>
+	</tr>
+	<tr>
+		<td>GetElement(ElementIndex)</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+      <td>SetExistingElements(Flag)</td>
+	  <td>True to use existing elements in the DOM rather than have CanvasMap create the elements </td>
+	  </tr>
+	<tr>
+	  <td>&nbsp;</td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+		<td>SetResizeFlag(ResizeFlag)</td>
+		<td>Set this to false if you do not want a particular element to be resized.</td>
+	</tr>
+	<tr>
+		<td>SetSupportsResize(Flag)</td>
+		<td>Set this to false if you do not want CanvasMap to resize the map in the StartMap() function call.</td>
+	</tr>
+	<tr>
+	  <td>SetMapRightOffset(NewOffset)</td>
+	  <td>For resizable maps, distance from the right side of the map to the right side of the page </td>
+	  </tr>
+	<tr>
+	  <td>SetMapBottomOffset(NewOffset)</td>
+	  <td>For resizable maps, distance from the bottom of the map to the bottom of the page </td>
+	</tr>
+	<tr>
+	  <td>SetHorizontalMargin(NewMargin)</td>
+	  <td>Distance between the map and the layer list for resizeable maps </td>
+	  </tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td><strong>Function to Initialize the CanvasMap</strong></td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>Initialize([MouseEvents])</td>
+		<td>This function puts together the elements set above. The MouseEvents parameter is optional and will turn off mouse event processing (i.e. makes the map static) if true </td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td><strong>Called After Initialize() and before StartMap() </strong></td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+      <td>AddLayer(TheLayer)</td>
+	  <td>Adds a new layer to the map </td>
+	  </tr>
+	<tr>
+      <td>AddBackground(TheLayer)</td>
+	  <td>Adds a new background layer to the map </td>
+	  </tr>
+	<tr>
+	  <td>&nbsp;</td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+      <td>GetScene()</td>
+	  <td>Returns the scene object for the map </td>
+	  </tr>
+	<tr>
+      <td>GetView()</td>
+	  <td>Returns the view object for the map </td>
+	  </tr>
+	<tr>
+      <td>SetProjector(TheProjector)</td>
+	  <td>Sets the projector if the &quot;ScenePosition&quot; information should include geographic coordinates</td>
+	  </tr>
+	<tr>
+      <td>SetMaxBounds(TheBounds)</td>
+	  <td>Sets the maximum reference bounds for the map.</td>
+	  </tr>
+	<tr>
+	  <td>SetZoomRange(Min,Max)</td>
+	  <td>Limits the zoom levels to be between Min and Max. </td>
+	  </tr>
+	<tr>
+	  <td>SelectTool(TheTool)</td>
+	  <td>Sets the initial tool for the map to display (see CMView for definitions) </td>
+	  </tr>
+	<tr>
+		<td>SetCurrentTab(TabIndex) </td>
+		<td>Set the tab that is selected (0 is typically layers, 1 for background, etc.) </td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+      <td>AddRightSticky(TheElement,MoveFlag,Offset)</td>
+	  <td>Makes an element &quot;sticky&quot; to the right side of the page (i.e. the width will resize)</td>
+	  </tr>
+	<tr>
+      <td>AddBottomSticky(TheElement,MoveFlag,Offset) </td>
+	  <td>Makes an element &quot;sticky&quot; to the bottom of the page (i.e. the height will resize)</td>
+	  </tr>
+	
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td><strong>Function to start the map running</strong></td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>StartMap(ResizeFlag)</td>
+		<td>Starts the map displaying and interacting with the user. Resize should be true to create a resizable map. </td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td><strong>Called after the map is started </strong></td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+	  <td>Paint()</td>
+	  <td>Repaints the map (does not typically need to be called from outsize CanvasMap) </td>
+	  </tr>
+	<tr>
+		<td>ZoomIn()</td>
+		<td>Zooms the map in by a factor of 2 </td>
+	</tr>
+	<tr>
+		<td>ZoomOut()</td>
+		<td>Zooms the map out by a factor of 2 </td>
+	</tr>
+	<tr>
+		<td>ZoomToMax()</td>
+		<td>Zoom to the maximum bounds set with SetMaxBounds() </td>
+	</tr>
+	<tr>
+		<td>ZoomToBounds(TheBounds)</td>
+		<td>Zooms the map to the specified bounds </td>
+	</tr>
+	<tr>
+	  <td>ZoomTo(NewLevel)</td>
+	  <td>Zooms to the specied zoom level </td>
+	  </tr>
+	<tr>
+	  <td>SetRefCenter(RefX,RefY)</td>
+	  <td>Positions the map with RefX,RefY in the center. </td>
+	  </tr>
+	<tr>
+		<td>Resize(ParentElement)</td>
+		<td>If you implement your own resize handler, call this function to resize the map </td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td><strong>Static Functions (called after start) </strong></td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+	  <td>SetPopupWindow(NewWindow)</td>
+	  <td>Registers a popup window right before it is made visible so it can be closed on mouse clicks </td>
+	  </tr>
+	<tr>
+		<td>HidePopupWindow(NewWindow)</td>
+		<td>Hides any active windows (this does not typically need to be called) </td>
+	</tr>
+</table>
+<p></p>
+<h2>&nbsp;</h2>
+<h2>CMLayer</h2>
+<p>Layers display spatial data. Each layer is a little different but they call use the functions described here.</p>
+<h3>Mark Types</h3>
+<p>The following definitions are used to change the type of mark that is displayed for points. CIRCLE is the default and you can specify an IconImage instead of these marks.</p>
+<ul>
+  <li>CMLayer.MARK_CIRCLE - MARK_SIZE specifies the diameter of the circle </li>
+  <li>CMLayer.MARK_TRIANGLE - MARK_SIZE is the width of the triangle </li>
+  <li>CMLayer.MARK_SQUARE - MARK_SIZE is the width and height of the square </li>
+  <li>CMLayer.MARK_STAR - MARK_SIZE is the width of a five pointed star </li>
+  </ul>
+<h3>Icon Images</h3>
+<p>An icon image  can replace a mark for point layers. The image will be displayed at it's full resolution and they should be relatively small for layers with lots of points. For an ICON_IMAGE, an object is provided with the following format:</p>
+<pre>{ 
+  TheImage:Image Object,
+  OffsetX:OffsetX,
+  OffsetY:OffsetY
+};</pre>
+<h3>Optional Property Defintions</h3>
+<p>The following properties can be set for any layer but whether they are implemented or not may depend on the layer type. All of these properties can be set for the entire layer and some can be set for individual features as well.</p>
+<table width="100%" border="1" cellspacing="0" cellpadding="2">
+  <tr>
+    <th>Property</th>
+    <th>Description</th>
+    <th>Individual Features </th>
+  </tr>
+  <tr>
+    <td>CMLayer.INFO_ATTRIBUTE </td>
+    <td> The attribute to use for HTML to be placed in an information window </td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>CMLayer.FEATURE_STYLE</td>
+    <td>Style to use to paint features </td>
+    <td>Yes</td>
+  </tr>
+  <tr>
+    <td>CMLayer.MOUSE_OVER_STYLE</td>
+    <td>Style to use when the user moves the mouse over a feature </td>
+    <td>Yes</td>
+  </tr>
+  <tr>
+    <td>CMLayer.SELECTED_STYLE</td>
+    <td>Style to to paint a feature when it is selected </td>
+    <td>Yes</td>
+  </tr>
+  <tr>
+    <td>CMLayer.ICON_IMAGE</td>
+    <td>Image to replace the mark for a point </td>
+    <td>(not implemened yet) </td>
+  </tr>
+  <tr>
+    <td>CMLayer.MARK_TYPE</td>
+    <td>Type of mark to display for points </td>
+    <td>(not implemened yet) </td>
+  </tr>
+  <tr>
+    <td>CMLayer.MARK_SIZE</td>
+    <td>Size of marks in pixels </td>
+    <td>(not implemened yet) </td>
+  </tr>
+  <tr>
+    <td>CMLayer.ZOOM_RANGE</td>
+    <td>Sets the zoom range for a layer to be displayed at. Value is an array formated at [MinZoomLevel,MaxZoomLevel] </td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<p>&nbsp; </p>
+<p>Below are the functions available for all layers. Not all layers may implement all functions. </p>
+<table width="100%" border="2" cellspacing="0" cellpadding="4">
+	<tr>
+		<th>Function</th>
+		<th>Description</th>
+	</tr>
+	<tr>
+		<td><strong>Get and Set Calls</strong></td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>SetName(Name)</td>
+		<td>set the name of the layer as it appears in the layer list</td>
+	</tr>
+	<tr>
+	  <td>GetName()</td>
+	  <td>Returns the name of the layer </td>
+	  </tr>
+	<tr>
+		<td>SetVisible(VisibleFlag) </td>
+		<td>make the layer visible (VisibleFlag=true) or not (VisibleFlag=false)</td>
+	</tr>
+	<tr>
+	  <td>IsVisible()</td>
+	  <td>Returns true if the VisibleFlag is set and the layer is within any optional zoom level ranges. </td>
+	  </tr>
+	<tr>
+	  <td>SetHTMLAttribute(HTMLAttribute)</td>
+	  <td>Heading for the attribute with HTML to display as information for a feature </td>
+	  </tr>
+	<tr>
+		<td>GetHTMLAttribute()</td>
+		<td>Returns the HTML attribute </td>
+	</tr>
+	<tr>
+	  <td>SetScene(NewScene)</td>
+	  <td>Set the scene the layer is in (only called by CanvasMap) </td>
+	  </tr>
+	<tr>
+	  <td>GetScene()</td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+	  <td>SetStyle(NewStyle)</td>
+	  <td>Set the style for the layer. This style will be used when the layer is being painted. </td>
+	  </tr>
+	<tr>
+	  <td>GetStyle()</td>
+	  <td>Return the current tyles </td>
+	  </tr>
+	<tr>
+	  <td>SetBounds(NewBounds)</td>
+	  <td>Set the bounds for the layer. This is typically only called by subclasses </td>
+	  </tr>
+	<tr>
+	  <td>SetInfoWindowWidth(newWidth)</td>
+	  <td>Set the width to use for the layer's info window </td>
+	  </tr>
+	<tr>
+	  <td>GetInfoWindowWidth()</td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+	  <td>&nbsp;</td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+	  <td>SetProperty(TheProperty,Value)</td>
+	  <td>Set a property value for all the features in a layer. </td>
+	  </tr>
+	<tr>
+	  <td>SetFeatureProperty(TheProperty,FeatureIndex,Value)</td>
+	  <td>Set a feature-specific property </td>
+	  </tr>
+	<tr>
+	  <td>SetFeatureProperties(TheProperty,FeatureProperties)</td>
+	  <td>Set all the feature properties at one time as an array. </td>
+	  </tr>
+	<tr>
+	  <td>&nbsp;</td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+      <td>SetIconImage(TheURL,OffsetX,OffsetY)</td>
+	  <td>Makes it easy to set the ICON_IMAGE property </td>
+	  </tr>
+	<tr>
+	  <td>&nbsp;</td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+	  <td><strong>Functions to Override </strong></td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+	  <td>GetIconImage()</td>
+	  <td>Returns an image to paint as the layer's icon in the legend </td>
+	  </tr>
+	<tr>
+	  <td>HasSettingsDialog()</td>
+	  <td>Override to return true if the layer uses the default settings dialog or provides its own </td>
+	  </tr>
+	<tr>
+	  <td>ShowSettingsDialog()</td>
+	  <td>Displays a settings dialog. The default dialog is displayed if the subclass does not override this function </td>
+	  </tr>
+	<tr>
+	  <td>SetURL()</td>
+	  <td>Subclasses will typically override this function to implement the data transfer from the server to the client. </td>
+	  </tr>
+	<tr>
+	  <td>&nbsp;</td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+	  <td>&nbsp;</td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+	  <td><strong>Overrides for attribute tables </strong></td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+	  <td>GetNumAttributeRows()</td>
+	  <td>Return the number of rows of attributes (should match the number of features) </td>
+	  </tr>
+	<tr>
+	  <td>GetNumAttributeColumns()</td>
+	  <td>Return the number of columns in the attributes </td>
+	  </tr>
+	<tr>
+	  <td>GetAttributeHeading(Index)</td>
+	  <td>Return the heading for a specified column </td>
+	  </tr>
+	<tr>
+	  <td>GetAttributeCell(ColumnIndex,RowIndex)</td>
+	  <td>Return the value in a particular cell in the attribute table. </td>
+	  </tr>
+	<tr>
+	  <td>&nbsp;</td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+	  <td>&nbsp;</td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+	  <td>SetSelectedFeature(Index)</td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+	  <td>UnselectAll()</td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+	  <td>&nbsp;</td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+	  <td><strong>Overrides for optimizing caching of data </strong></td>
+	  <td>These are more advanced features for layers that manage a cache as the view changes </td>
+	  </tr>
+	<tr>
+	  <td>ZoomLevelChanged(TheView)</td>
+	  <td>Called when the zoom level chagnes </td>
+	  </tr>
+	<tr>
+	  <td>ViewMoved(TheView)</td>
+	  <td>Called when the view bounds change </td>
+	  </tr>
+	<tr>
+	  <td>&nbsp;</td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+	  <td>&nbsp;</td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+		<td><strong>Mouse Event Handling</strong></td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+	  <td>In(TheView,RefX,RefY) </td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+		<td>MouseDown(TheView,RefX,RefY) </td>
+		<td> respond to a &quot;mouseDown()&quot; event within the scene. Return true if the layer used the event and other layers should not.</td>
+	</tr>
+	<tr>
+		<td>MouseMove(TheView,RefX,RefY)</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>MouseUp(TheView,RefX,RefY)</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td><strong>Painting</strong></td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>Paint(TheView)</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+	  <td>Resize(TheView)</td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+	  <td>PaintSelected(TheView)</td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+	  <td>GetSearchResults(SearchPhrase,ResultsPanel)</td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+	  <td>&nbsp;</td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+	  <td>&nbsp;</td>
+	  <td>&nbsp;</td>
+	  </tr>
+</table>
+<h2>&nbsp;</h2>
+<h2>CMScene</h2>
+<p>It is rare that you'll need to call any of these functions because most are replicated at the CanvsMap level. </p>
+<table width="100%" border="2" cellspacing="0" cellpadding="4">
+	<tr>
+		<td><strong>Function</strong></td>
+		<td><strong>Description</strong></td>
+	</tr>
+	<tr>
+		<td><strong>Functions to call</strong></td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+	  <td>LayerIndex=AddBackground(TheLayer)</td>
+	  <td>Adds a background to the background layer list </td>
+	  </tr>
+	<tr>
+	  <td>SetSelectedBackgroundIndex(Index)</td>
+	  <td>Sets the background that is selected and displayed </td>
+	  </tr>
+	<tr>
+		<td>LayerIndex=AddLayer(TheLayer)</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>TheLayer=GetLayer(Index)</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>LayerIndex=GetLayerIndex(TheLayer) </td>
+		<td>returns the current index for the specified layer</td>
+	</tr>
+	<tr>
+		<td>MoveLayerUp(Index)</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>MoveLayerDown(Index)</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>DeleteLayer(Index)</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>MoveLayer(TheLayer,NewIndex) </td>
+		<td>move the specified layer to the location specified.</td>
+	</tr>
+	<tr>
+	  <td>SetAttributeTableElement(NewAttributeTableElement)</td>
+	  <td>Sets the DOM element for the display of the attribute table </td>
+	  </tr>
+	<tr>
+	  <td>UnselectAll()</td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+	  <td>&nbsp;</td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+	  <td><strong>Tyipcally only called by CanvaMap </strong></td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+	  <td>AddView(TheView)</td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+	  <td>GetSearchResults(TheText,SearchResults) </td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+	  <td>ZoomLevelChanged()</td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+	  <td>ViewMoved(TheView)</td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+	  <td>&nbsp;</td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+	  <td><strong>Event Handling, called by CanvasMap </strong></td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+	  <td>In=function(TheView,RefX,RefY) </td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+	  <td>MouseDown(TheView,RefX,RefY) </td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+	  <td>MouseMove(TheView,RefX,RefY) </td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+	  <td>MouseUp(TheView,RefX,RefY) </td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+	  <td>Resize=function(TheView) </td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+	  <td>Paint=function(TheView) </td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+	  <td>Repaint=function() </td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+	  <td>LayerSettingsChanged=function(TheLayer)</td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+	  <td>&nbsp;</td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+		<td>AddLayerList(TheElement)</td>
+		<td>Add the list of layers (with supported events) to the specified element</td>
+	</tr>
+	<tr>
+	  <td>AddBackgroundList(TheElement)</td>
+	  <td>&nbsp;</td>
+	  </tr>
+</table>
+<h2>&nbsp;</h2>
+<h2>CMView</h2>
+<p>Typically, only the CanvasMap code will call the view. This is for those wishing to create their own layer types. </p>
+<p>Below are the currently defined tools:</p>
+<ul>
+  <li>TOOL_HAND</li>
+  <li>TOOL_INFO</li>
+  <li>TOOL_EDIT</li>
+  <li>TOOL_ADD</li>
+</ul>
+<table width="100%" border="2" cellspacing="0" cellpadding="4">
+	<tr>
+		<td><strong>Function</strong></td>
+		<td><strong>Description</strong></td>
+	</tr>
+	<tr>
+		<td><strong>Constructor</strong></td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>CMView() </td>
+		<td>Tyipcally called by CanvasMap</td>
+	</tr>
+	<tr>
+		<td>SetMinScale(MinScale)</td>
+		<td>Setse the minimum scale value used when the zoom is at 0. This is typically 1 for 1 meter = 1 pixel at ZoomLevel=0</td>
+	</tr>
+	<tr>
+		<td>SetScene(CMScene)</td>
+		<td>Tyipcally called by CanvasMap</td>
+	</tr>
+	<tr>
+		<td>Setup(CanvasID)</td>
+		<td>Tyipcally called by CanvasMap</td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>GetContext()</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>GetScale()</td>
+		<td>Computes a scale value based on the zoom level and MinScale</td>
+	</tr>
+	<tr>
+	  <td>GetExtent()</td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>MouseDown(TheEvent)</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>MouseMove(TheEvent)</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>MouseUp(TheEvent)</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>MouseWheel(TheEvent)</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>MouseUp(TheEvent)</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>SetMaxBounds(MaxBounds)</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>SetZoomRange(MinZoom,MaxZoom)</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>SetRefCenter(RefX,RefY)</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>GetRefCenter()</td>
+		<td>Object:RefX,RefY</td>
+	</tr>
+	<tr>
+		<td>ZoomToBounds(NewBounds)</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>ZoomIn()</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>ZoomOut()</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>ZoomTo(ZoomLevel)</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>ZoomToMaxBounds()</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>SetTool(NewTool)</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>GetTool()</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td><strong>Pixel to Ref Coordinate Conversion</strong></td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>GetPixelXFromRefX(RefX) </td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>GetPixelYFromRefY(RefY) </td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>GetPixelFromRef(RefX,RefY) </td>
+		<td>Returns an object with PixelX and PixelY</td>
+	</tr>
+	<tr>
+		<td>GetPixelWidthFromRefWidth(RefWidth) </td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>GetPixelHeightFromRefHeight(RefHeight) </td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td><strong>Ref Coordinate to Pixel Coordinate Conversion</strong></td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>GetRefWidthFromPixelWidth(PixelWidth) </td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>GetRefHeightFromPixelHeight(PixelHeight) </td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>GetRefXFromPixelX(PixelX) </td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>GetRefYFromPixelY(PixelY) </td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td><strong>Paint Functions</strong></td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>SetStyle(TheStyle)</td>
+		<td>Called to set the style for the painting </td>
+	</tr>
+	<tr>
+	  <td>RestoreStyle()</td>
+	  <td>Restores the style that was active before the last call to SetStyle() </td>
+	  </tr>
+	<tr>
+		<td>Paint()</td>
+		<td>Paints the current contents of the scene into the view</td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td><strong>Functions to convert from reference coordinates to pixel coordinates</strong></td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>InDocumentPixel(PixelX,PixelY) </td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>InCanvasPixel(PixelX,PixelY) </td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+	  <td><strong>Paint based on pixel coordinates </strong></td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+	  <td>PaintImage=function(TheImage,PixelX,PixelY)</td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+	  <td>&nbsp;</td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td><strong>Functions to paint items in reference coordinates</strong></td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>PaintRefBounds(TheBounds)</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>PaintRefCircle(X,Y,RadiusInPixels)</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>PaintRefText(X,Y,Text)</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>PaintRefLine(X1,Y1,X2,Y2)</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>PaintRefRaster(TheImage,TheRefBounds)</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>PaintRefImage(RefX,RefY,TheImage)</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+	  <td>PaintRefImageScaled(TheImage,RefX,RefY,RefWidth,RefHeight)</td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+	  <td>PaintRefPoly2(Xs,Ys,Closed)</td>
+	  <td>Paints from arrays and needs to be renamed </td>
+	  </tr>
+	<tr>
+	  <td>&nbsp;</td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+	  <td><strong>Painting functions that are compatible with GeoJSON objects </strong></td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+		<td>PaintRefPolygon(TheCoordinates)</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+	  <td>PaintRefLineString(TheCoordinates)</td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+	  <td>PaintRefGeometry(TheGeometry)</td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+	  <td>&nbsp;</td>
+	  <td>&nbsp;</td>
+	  </tr>
+	<tr>
+		<td>CreateInfoWindow(ID,RefX,RefY,WindowWidth,WindowHeight,TheHTML)</td>
+		<td>&nbsp;</td>
+	</tr>
+</table>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<!-- InstanceEndEditable -->
+
+<!-- end main content --></div>
+
+<!-- end main content container --></div>
+
+
+<!-- end main container --></div>
+
+<!-- begin footer container --><div id="footer_container" style="width:100%;height:175px;background-color:#333333;color:#999999">
+
+<!-- begin footer --><div id="footer" style="width:960px;margin:0 auto">
+
+<table width="600px" style="margin-top:20px">
+  <tr>
+    <td width="200px" align="left" valign="top">
+    	<h3>Humboldt State Unviersity</h3>
+        <p></p>
+    </td>
+    <td width="200px" align="left" valign="top">
+    	<h3>Created By Dr. Jim Graham</h3>
+        <p></p>
+    </td>
+    <td width="200px" align="left" valign="top">
+    	<h3>2015</h3>
+        <p></p>
+    </td>
+  </tr>
+</table>
+
+
+<!-- end footer --></div>
+
+<!-- end footer container --></div>
+
+</body>
+
+<!-- InstanceEnd --></html>

@@ -1,0 +1,266 @@
+<!DOCTYPE HTML>
+
+<html><!-- InstanceBegin template="/Templates/Template_Main.dwt" codeOutsideHTMLIsLocked="false" -->
+
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>GSP 470 - Canvas Map</title>
+<!-- InstanceEndEditable -->
+
+<link href="../Includes/canvas_map.css" rel="stylesheet" type="text/css">
+<!-- InstanceBeginEditable name="head" -->
+<!-- InstanceEndEditable -->
+
+</head>
+
+<body>
+    
+<!-- begin main container --><div id="main_container" style="width:100%;overflow:visible">
+
+
+<!-- begin masthead --><div id="masthead" style="width:100%;height:24px;"> 
+
+<!-- content for masthead goes inside masthead div -->
+
+<!-- end masthead --></div>
+
+
+<!-- begin header --><div id="header" style="width:100%;height:100px;">
+
+<!-- content for header goes inside header div -->
+
+    <!-- begin logo --><div id="logo">
+      <a href="../../../index.html"><img src="../Images/CanvasMap_Logo_285w_v2.png" width="285" height="100" alt="Logo"></a>      
+    <!-- end logo --></div>
+
+<!-- end header --></div>
+
+
+<!-- begin main nav container --><div id="main_nav_container" style="width:100%;">
+<!-- begin main nav --><div id="main_nav" style="width:100%">
+	<ul>
+    	<li><a href="CanvasMap.html">Home</a></li>
+        <li><a href="GettingStarted.html">GETTING STARTED</a></li>
+        <li><a href="Tutorials.html">tutorials</a></li>
+        <li><a href="Reference.html">Reference</a></li>
+	</ul>
+<!-- end main nav --></div>
+
+
+
+<!-- end main nav container --></div>
+
+<!-- begin main content container --><div id="main_content_container" style="width:100%">
+
+<!-- begin main content --><div id="content" style="width:960px;margin:0 auto">
+
+<!-- InstanceBeginEditable name="EditRegion3" -->
+<h1>Tutorial: The Simplest  Map</h1>
+<p>The links below will take you to code samples for two maps containing simple vector data.</p>
+<ul>
+	<li><a href="../Map_Simplest_GetURL.html">Simple Map to Get Data From a URL </a>- uses a URL to get the data and requires a web server</li>
+	<li>Simple Map to Set Data from a Local File (Map_Simplest_SetData.html) - only uses local data, does not require a web server (you'll need to run this map by double-clicking on it in the file explorer). </li>
+	</ul>
+<p>If you are using a web server, use the first code sample, otherwise, use the second one. Click on the link and you should see the default CanvasMap display on the web page. </p>
+<p>Note that the footer for the map will include an error message as we have simplified the code and removed the projector that would normally provide geographic coordinates in the footer. You can ignore this for now as we'll add the projector back in a future tutorial.</p>
+<p>Do a view source on the code and you'll see several sections of code divided by lines of asterisks (&quot;*&quot;). These sections are:</p>
+<ul>
+	<li>Start of the HTML file</li>
+	<li>Functions to control CanvasMap: Functions to start up and control the map</li>
+	<li>Includes: JavaScript and CSS files</li>
+	<li>Start of HTML Body: The remainder of the HTML including the one tag for the map, &quot;MapContainer_0&quot;</li>
+</ul>
+<p>There are a number of JavaScript files included and you only need to include those that are needed for your specific map. CanvasMap also uses jQuery so you'll need to load a version of it. We include one that is compatible with the current version of CanvasMap.</p>
+<p>The only function we need for the default map below is an &quot;initialization&quot; or &quot;init()&quot; function to setup the map with the desired layers. We also need to have a global variable to hold on to the CanvasMap object. This is the main object that we will interact with in future tutorials to customize the map.</p>
+<p>The body of the HTML just has the one tag we need for the &quot;MapContainer_0&quot; element. This is the element that the map will be placed into when &quot;Initialize()&quot; is called.</p>
+<h2>Initializing the map</h2>
+<p>Take a look at the &quot;init()&quot; function and you'll see code to initialize the map, add layers, and start the map.</p>
+<p>The code below will:</p>
+<ul>
+	<li>Create the CanvasMap object and save it to the global variable</li>
+	<li>Set the location of the images folder. This tells CanvasMap where to find the images. The current setting should work as long as you have your maps stored in the &quot;CanvasMap&quot; folder. If you move them, you'll need to update the image folder.</li>
+	<li>Initialize the CanvasMap. The &quot;Initialization()&quot; function sets up the internal state of the CanvasMap so we can add layers to it.</li>
+</ul>
+
+<pre>TheCanvasMap=new CanvasMap(); // creates the map object
+	
+TheCanvasMap.SetImageFolder("Images/"); // lets CanvasMap know where the images are
+	
+TheCanvasMap.Initialize(); // sets up the view, scene, and event handlers for the map
+</pre>
+
+<p>The code below adds a layer to the map. &quot;CMLayerGeoJSON&quot; displays polygon and linestring (i.e. polyline) data in the map. There are other layer types we'll learn about in future tutorials.  This code takes the following steps:</p>
+<ul>
+	<li>Create the layer </li>
+	<li>Give the layer a name which will appear in the layer list</li>
+	<li>Set the URL for where the data is located. Note that we also send the layer the &quot;CMView&quot; that is within the CanvasMap (more on this later) and a flag &quot;true&quot; indicating we want CanvasMap to &quot;ZoomTo&quot; this layer after it is loaded. Note that if you are running without a server and used the &quot;Set Data&quot; page, you'll have a &quot;SetData()&quot; function instead of the &quot;SetURL()&quot; function.</li>
+	<li>Set the style of the layer to be filled with &quot;PaleGreen&quot;</li>
+	<li>Add the layer to the CanvasMap</li>
+</ul>
+<pre>
+var TheCountryLayer=new CMLayerGeoJSON();
+
+TheCountryLayer.SetName("Countries");
+
+TheCountryLayer.SetURL(&quot;GISData/GoogleMercator_Countries_100m.js&quot;,TheCanvasMap.GetView(),true);
+
+TheCountryLayer.SetStyle({fillStyle:"PaleGreen"}); // fill the data with pale green color
+
+TheCanvasMap.AddLayer(TheCountryLayer);
+</pre>
+<p>The final step is just to call &quot;StartMap&quot;. We have specified a flag of &quot;false&quot; to keep CanvasMap from resizing the map to fit the browser window as the default is to create a resizable map (more on this later).</p>
+
+<pre>
+TheCanvasMap.StartMap(false); // don't resize
+</pre>
+
+<h2>Changing Layer Styles</h2>
+<p>The &quot;SetStyle()&quot; function in a layer lets you change how the layer is displayed. This uses the HTML 5 Canvas styles and is very flexible. This is a good time to try out some different styles and see how they work. Some examples are below and the full list is available at the <a href="http://www.w3schools.com/tags/ref_canvas.asp">W3Schools web site</a>.</p>
+<p>Some examples include:</p>
+<p>Making the countries black with white borders:</p>
+
+<pre>TheCountryLayer.SetStyle(
+{
+	fillStyle:&quot;#000000&quot;,
+	strokeStyle:&quot;#ffffff&quot;,
+}); 
+</pre>
+
+<p>Thick red lines:</p>
+
+<pre>TheCountryLayer.SetStyle(
+{
+	fillStyle:&quot;#000000&quot;,
+	strokeStyle:&quot;#ff0000&quot;,
+	lineWidth:2,
+}); 
+</pre>
+
+<p>Take some time now and play with the different colors and other options for canvas drawing.</p>
+<p>Note: The amount of time it takes to paint data into the canvas is dependent upon the amount of data and how complex you make the drawing. If you have very detailed outlines for all the countries in the world, and you add a shadow, don't expect the map to redraw anytime soon!</p>
+<h2>Changing the Data</h2>
+<p>The CMLayerGeoJSON class supports GeoJSON data and this tutorial is showing the data in GoogleMercator. Note that I am referring to this as &quot;GoogleMercator&quot;. To be compatible with tile layers from OpenStreetMap and other vectors, we need to be using the exact spatial reference that was created with GoogleMaps. This is not a great projection for maps but there are many tile sets out there and we'll be using them in future tutorials (some of them are really cool). For this reason, you'll need to project your data into the GoogleMaps projection. BlueSpray supports this will a custom projection engine and I don't know of another GIS application that does.</p>
+<p>To setup data for use in this tutorial, use the following steps:</p>
+<ul>
+	<li>Obtain a shapefile (or other supported format) with polygons or linestrings (polylines) in the spatial reference WGS84, Geographic.</li>
+	<li>Load the file into BlueSpray</li>
+	<li>Right-click on the &quot;Scene&quot; and select &quot;Transforms -&gt; Change SRS&quot;.</li>
+	<li>Click on &quot;Explore&quot;</li>
+	<li>Select &quot;GoogleMaps&quot; from the &quot;Projector&quot; menu</li>
+	<li>Uncheck all the options under &quot;Clipping &quot;Settings&quot;</li>
+	<li>Click &quot;Update&quot;.</li>
+	<li>Click &quot;OK&quot;</li>
+	<li>Click &quot;OK&quot; and your data should be projected to the GoogleMaps projection.</li>
+	<li>Right click on the layer and select &quot;Export to File...&quot;</li>
+	<li>Save the file with a &quot;.js&quot; extension. This will save it as a GeoJSON  formatted file.</li>
+	<li>Move the file to where your web page can access it.</li>
+	</ul>
+<p>Note that if you are using CanvasMap without a web server, you'll need to add a line to the top of the GeoJSON file such as &quot;var FileName=&quot; so you can load it without using a URL.</p>
+<p>Finally, change the string the &quot;SetURL()&quot; or &quot;SetData()&quot; function to your new file. The data should appear in your map when you refresh the browser.</p>
+<h2>Raster Layers</h2>
+<p>You can also add raster layers. The code below will add a single raster from our server. Note the web only supports &quot;PNG&quot; and &quot;JPG&quot; formats and these formats do not provide georeferencing information. You'll need to speify the bounds of the raster as shown be low. The values can be found in BlueSpray by going to &quot;Properties -&gt; Extent&quot; for a raster layer. </p>
+<pre>//*****************************************************
+	
+var Layer_World=new CMLayerRaster();
+	
+Layer_World.SetURL("GISData/Rasters/GoogleMercator/world.topo.bathy.200411.3x5400x2700.jpg",TheCanvasMap.GetView()); 
+Layer_World.SetName("Blue Marble");
+		
+var TheBounds = 
+{
+	XMin: -6214,
+	XMax: 6.6978368E7,
+	YMin: -8.6442292E7,
+	YMax: 1.9333428E7,
+}
+Layer_World.SetBounds(TheBounds);
+
+TheCanvasMap.AddLayer(Layer_World);</pre>
+<h2>Large Rasters with Pyramids </h2>
+<p>The method above works for small rasters in small areas. Large rasters need to be turned into &quot;pyramids&quot; of &quot;tiles&quot; to keep the performance fast. This can be done in BlueSpray by right clicking on a raster layer and selecting &quot;Transforms (other) -&gt; To Pyramid Layer &quot;. This will create a pyramid of tiles in BlueSpray. Then, right-click and select &quot;Export to File&quot;. Navigate to a folder for the pyramid files and elect &quot;Canvas Map Folder&quot; as the file type. Don't worry about the file name as BlueSpray will put a large number of files in the folder including &quot;pngs&quot; that represent the files, an &quot;info.js&quot; file with information on the raster, and a series of &quot;tile&quot; files with information on each tile. </p>
+<pre>var Layer_World=new CMLayerPyramid();
+
+TheCanvasMap.AddBackground(Layer_World);
+
+Layer_World.SetURL("/GISData/GoogleMercator/Pyramid/BlueMarble",TheView); 
+Layer_World.SetName("BlueMarble");
+</pre>
+<p>Note that you do not need to provide the bounds as this is already defined by the tiling standard. You do need to call &quot;AddBackground()&quot; to add a tiled layer as a background but call &quot;AddLayer()&quot; if you want it to appear in the layer list.</p>
+<p>Also note that the layer should be convered into the desired spatial reference before converting it to a pyramid. </p>
+<h2>Large Vector data sets with Pyramids  </h2>
+<p>Vector layers can also slow down a web solution if they are too complicated. Vector layers of small areas, such as islands, can be displayed with GeoJSON but large layers such as a countries of the world layer, need to be converted into a Pyramid of tiles. This can be done for vector layers in exactly the same way as rasters except the &quot;To Pyramid Layer&quot; is in the &quot;Transforms&quot; menu. </p>
+<pre>var Layer_World=new CMLayerPyramid();
+
+TheCanvasMap.AddBackground(Layer_World);
+
+Layer_World.SetURL("/GISData/GoogleMercator/Pyramid/NaturalEarth_Countries",TheView); 
+Layer_World.SetName("Countries");
+</pre>
+<p>&nbsp;</p>
+<h2></h2>
+<h2>Open Pyramids</h2>
+<p>Below is an example of adding a pyramid of raster tiles to CanvasMap.</p>
+<pre>//*****************************************************
+// add the LandSat (California) pyramid layer
+	
+var Layer_California=new CMLayerPyramid();
+Layer_California.SetName("California");
+		
+TheCanvasMap.AddLayer(Layer_California);
+		
+var TheBounds = 
+{
+  		XMin: 284384,
+ 		XMax: 1412832,
+ 		YMin: 3541824,
+ 		YMax: 4729664
+}
+Layer_California.SetBounds(TheBounds);
+	
+Layer_California.SetURL("/GISData/Pyramids/WGS_84_UTM_10_North/CA_and_Bathy_2_Tiles/Tiles_",TheCanvasMap.GetView());
+&nbsp;</pre>
+<h2>Debugging JavaScript</h2>
+<p>If you have not already discovered them, the new browsers contain very powerful source-code debuggers that make debugging JavaScript much, much easier than in the past. I highly recommend using one.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<!-- InstanceEndEditable -->
+
+<!-- end main content --></div>
+
+<!-- end main content container --></div>
+
+
+<!-- end main container --></div>
+
+<!-- begin footer container --><div id="footer_container" style="width:100%;height:175px;background-color:#333333;color:#999999">
+
+<!-- begin footer --><div id="footer" style="width:960px;margin:0 auto">
+
+<table width="600px" style="margin-top:20px">
+  <tr>
+    <td width="200px" align="left" valign="top">
+    	<h3>Humboldt State Unviersity</h3>
+        <p></p>
+    </td>
+    <td width="200px" align="left" valign="top">
+    	<h3>Created By Dr. Jim Graham</h3>
+        <p></p>
+    </td>
+    <td width="200px" align="left" valign="top">
+    	<h3>2015</h3>
+        <p></p>
+    </td>
+  </tr>
+</table>
+
+
+<!-- end footer --></div>
+
+<!-- end footer container --></div>
+
+</body>
+
+<!-- InstanceEnd --></html>

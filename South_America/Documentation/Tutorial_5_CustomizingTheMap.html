@@ -1,0 +1,182 @@
+<!DOCTYPE HTML>
+
+<html><!-- InstanceBegin template="/Templates/Template_Main.dwt" codeOutsideHTMLIsLocked="false" -->
+
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>GSP 470 - Canvas Map</title>
+<!-- InstanceEndEditable -->
+
+<link href="../Includes/canvas_map.css" rel="stylesheet" type="text/css">
+<!-- InstanceBeginEditable name="head" -->
+<!-- InstanceEndEditable -->
+
+</head>
+
+<body>
+    
+<!-- begin main container --><div id="main_container" style="width:100%;overflow:visible">
+
+
+<!-- begin masthead --><div id="masthead" style="width:100%;height:24px;"> 
+
+<!-- content for masthead goes inside masthead div -->
+
+<!-- end masthead --></div>
+
+
+<!-- begin header --><div id="header" style="width:100%;height:100px;">
+
+<!-- content for header goes inside header div -->
+
+    <!-- begin logo --><div id="logo">
+      <a href="../../../index.html"><img src="../Images/CanvasMap_Logo_285w_v2.png" width="285" height="100" alt="Logo"></a>      
+    <!-- end logo --></div>
+
+<!-- end header --></div>
+
+
+<!-- begin main nav container --><div id="main_nav_container" style="width:100%;">
+<!-- begin main nav --><div id="main_nav" style="width:100%">
+	<ul>
+    	<li><a href="CanvasMap.html">Home</a></li>
+        <li><a href="GettingStarted.html">GETTING STARTED</a></li>
+        <li><a href="Tutorials.html">tutorials</a></li>
+        <li><a href="Reference.html">Reference</a></li>
+	</ul>
+<!-- end main nav --></div>
+
+
+
+<!-- end main nav container --></div>
+
+<!-- begin main content container --><div id="main_content_container" style="width:100%">
+
+<!-- begin main content --><div id="content" style="width:960px;margin:0 auto">
+
+<!-- InstanceBeginEditable name="EditRegion3" -->
+<h2>Customizing the Map</h2>
+<h3>Change the style of an element</h3>
+<p>There are a variety of options to change the style of elements. </p>
+<p>1. New CSS file</p>
+<p>If you want to change all the element's styles, you can save the CanvasMap.css file with a new name and/or new folder and point your HTML file to the new CSS file. Then, change the file as desired.</p>
+<p>2. Change one element</p>
+<p>After calling Initialization() you can change the style of any element as follows:</p>
+<pre>var MapHeader=TheCanvasMap.GetElement(CanvasMap.MAP_HEADER); // obtains the element from your CanvasMap
+MapHeader.style.borderRadius=&quot;10px&quot;; // changes the radius of the map header to 10 pixels</pre>
+<p>3. Dynamically change styles. </p>
+<p>You can use the approach in item 2 above to change the styles whenever you desired. This could be when a tool or element is clicked on or with animation.</p>
+<h3>Change the images in a map</h3>
+<p>You can change the images by just changing the ones that are specified when you call SetImageFolder() or create a new folder with images that have the same names as those in the default folder that comes with CanvasMap.</p>
+<h3>Change the contents of an element</h3>
+<p>You can customize the contents of some of the elements, such as the MapHeader or ToolTitle. After calling Initialize() you can get the element and then set its HTML</p>
+<pre> var MapHeader=TheCanvasMap.GetElement(CanvasMap.MAP_HEADER);
+MapHeader.innerHTML=&quot;&lt;img src='../images/Title_OiledWildlifeMap_White.png' alt='Map Title'&gt;&quot;; </pre>
+<h3>Subclass an element</h3>
+<p>Create the element and use SetElement() to specify the new element before initialization. The element should have the standard ID with &quot;_&lt;Index&gt;&quot; added.</p>
+<h3>Do your own positioning on resize</h3>
+<p>If you just want to change the resizing for a few elements, you can call CanvasMap.Resize() and then reposition any element you desire. If you are going to provide positioning for all elements in the map, there is no reason to call CanvasMap.Resize().</p>
+<h3>Provide an HTML layout for the map:</h3>
+<p>This is definitely an advanced feature but can be done with CanvasMap. You will need to provide an entire set of elements for CanvasMap to work with.</p>
+<ul>
+	<li>Examples: Move layer list to the left side of the map</li>
+	<li>Use the same names as those defined in CanvasMap.js for the elements. Remember to and &quot;_&lt;Index&gt;&quot; where &quot;&lt;Index&gt;&quot; is the index to the CanvasMap on your page (e.g. the first map would have (&quot;_0&quot;) added to each name, the second would have (&quot;_1&quot;), etc.). Then, call SetGetExistingElement() and CanvasMap will search for your elements when initializing the map.</li>
+	<li>In this case, you will typically need to replace the Resize() function in CanvasMap as well so that CanvasMap does not try to position the elements where it traditionally does.</li>
+</ul>
+<h3>Zooming to an area</h3>
+<p>You can specify a location for the center of the map and a zoom level to start at. The zoom values for CanvasMap are 1 for a 1:1 ratio between map units (e.g. meters, degrees, feet) and pixels on the screen. As you zoom out, they decrease as integer values (.e.g -1, -2, -3). As you zoom in they increase as integer vales (e.g. 1, 2, 3, 4, 5).</p>
+<p>In the example below, we are zooming into a coordinate that is specified in GoogleMap units. The easy way to determine such a location is to load your layer into a GIS application, put the mouse over the desired spot, and write down the coordinate's x and y values.</p>
+
+<pre>TheCanvasMap.TheView.ZoomTo(-10); // zoomed out by a factor of 2^10	
+TheCanvasMap.TheView.SetRefCenter(600000,4500000);</pre>
+
+<h3>Limiting the area the user can view</h3>
+<p>You can change the maximum bounds of the map which will limit how far the user can pan the map. You'll almost always want to limit the &quot;Zoom&quot; levels with this as well.</p>
+<p>You can easily find the bounds by loading your  data into a GIS application and moving the cursor over the corners of the data. Then, enter the x and y coordinate values as shown below.</p>
+
+<pre>var TheBounds = 
+{
+  	XMin: -500000, // left side (usually wester most edge)
+	XMax: 2000000, // right side (usually eastern most edge)
+	YMin: 3300000, // bottom side (usually southern most edge)
+	YMax: 5000000 // top side (usually northern most edge)
+}
+TheCanvasMap.TheView.SetMaxBounds(TheBounds);
+TheCanvasMap.TheView.SetZoomRange(-11,10);
+</pre>
+
+<h3>Adding a CMProjector</h3>
+<p>CanvasMap can use projected data if you can provide a projector class. Projectors are available for UTM and GoogleMaps projections. </p>
+
+<pre>// setup the projector
+var TheProjector=new CMProjectorUTM();
+TheProjector.SetDatum(CMProjector.WGS_84);
+TheProjector.SetZone(10);
+TheProjector.SetSouth(false);
+TheCanvasMap.SetProjector(TheProjector);</pre>
+
+<p>The code below will add the &quot;GoogleMaps&quot; projector which matches the GoogleMaps projection and the OpenTileFormat. This will allow you to show coordinates in degrees with a map that is in the GoogleMaps projection.</p>
+<pre>var TheProjector=new CMProjectorGoogleMaps();<br>TheProjector.SetZoomLevel(18);<br>TheCanvasMap.SetProjector(TheProjector);	<br></pre>
+<h3>Changing the Title</h3>
+<pre>var MapHeader=TheCanvasMap.GetElement(CanvasMap.MAP_HEADER); // NOTE: This would seem to conflict with header title in canvas map. CanvasMap.ALERT
+MapHeader.style.padding=&quot;1px 0px 0px 0px&quot;;
+MapHeader.innerHTML=&quot;&lt;img src='../images/Title_OiledWildlifeMap_White.png' alt='Map Title'&gt;&quot;;
+</pre>
+
+<h3>Changing the Credits</h3>
+<pre>var Credits=TheCanvasMap.GetElement(CanvasMap.MAP_CREDITS);
+Credits.style.textAlign=&quot;right&quot;;
+Credits.style.marginRight=&quot;5px&quot;;
+Credits.innerHTML=&quot;Muhl, Kimble, Bean, and Graham&lt;br&gt;19th of August, 2015&quot;;
+</pre>
+
+<h3>Changing the displayed Spatial Refernce </h3>
+<pre>var SRS=TheCanvasMap.GetElement(CanvasMap.MAP_SRS); 
+SRS.innerHTML="Universal Transverse Mercator, Zone 10 North"; 
+</pre>
+
+<h3>Changing the coordinate units </h3>
+<pre>TheCanvasMap.SetCoordinateUnits(CanvasMap.COORDINATES_UNITS_METERS);
+</pre>
+
+<!-- InstanceEndEditable -->
+
+<!-- end main content --></div>
+
+<!-- end main content container --></div>
+
+
+<!-- end main container --></div>
+
+<!-- begin footer container --><div id="footer_container" style="width:100%;height:175px;background-color:#333333;color:#999999">
+
+<!-- begin footer --><div id="footer" style="width:960px;margin:0 auto">
+
+<table width="600px" style="margin-top:20px">
+  <tr>
+    <td width="200px" align="left" valign="top">
+    	<h3>Humboldt State Unviersity</h3>
+        <p></p>
+    </td>
+    <td width="200px" align="left" valign="top">
+    	<h3>Created By Dr. Jim Graham</h3>
+        <p></p>
+    </td>
+    <td width="200px" align="left" valign="top">
+    	<h3>2015</h3>
+        <p></p>
+    </td>
+  </tr>
+</table>
+
+
+<!-- end footer --></div>
+
+<!-- end footer container --></div>
+
+</body>
+
+<!-- InstanceEnd --></html>

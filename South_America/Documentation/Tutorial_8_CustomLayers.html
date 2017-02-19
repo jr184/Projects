@@ -1,0 +1,164 @@
+<!DOCTYPE HTML>
+
+<html><!-- InstanceBegin template="/Templates/Template_Main.dwt" codeOutsideHTMLIsLocked="false" -->
+
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>GSP 470 - Canvas Map</title>
+<!-- InstanceEndEditable -->
+
+<link href="../Includes/canvas_map.css" rel="stylesheet" type="text/css">
+<!-- InstanceBeginEditable name="head" -->
+<!-- InstanceEndEditable -->
+
+</head>
+
+<body>
+    
+<!-- begin main container --><div id="main_container" style="width:100%;overflow:visible">
+
+
+<!-- begin masthead --><div id="masthead" style="width:100%;height:24px;"> 
+
+<!-- content for masthead goes inside masthead div -->
+
+<!-- end masthead --></div>
+
+
+<!-- begin header --><div id="header" style="width:100%;height:100px;">
+
+<!-- content for header goes inside header div -->
+
+    <!-- begin logo --><div id="logo">
+      <a href="../../../index.html"><img src="../Images/CanvasMap_Logo_285w_v2.png" width="285" height="100" alt="Logo"></a>      
+    <!-- end logo --></div>
+
+<!-- end header --></div>
+
+
+<!-- begin main nav container --><div id="main_nav_container" style="width:100%;">
+<!-- begin main nav --><div id="main_nav" style="width:100%">
+	<ul>
+    	<li><a href="CanvasMap.html">Home</a></li>
+        <li><a href="GettingStarted.html">GETTING STARTED</a></li>
+        <li><a href="Tutorials.html">tutorials</a></li>
+        <li><a href="Reference.html">Reference</a></li>
+	</ul>
+<!-- end main nav --></div>
+
+
+
+<!-- end main nav container --></div>
+
+<!-- begin main content container --><div id="main_content_container" style="width:100%">
+
+<!-- begin main content --><div id="content" style="width:960px;margin:0 auto">
+
+<!-- InstanceBeginEditable name="EditRegion3" -->
+<h1>Custom Layers </h1>
+<p>It is relatively easy to customize the existing layers or create your own layers with CanvasMap. To customize an existing layer, you simply create a new layer, inherit from the existing layer, and override the desired functions. To create a wholly new layer, you do exactly the same thing except you inherit from the base class class &quot;Layer&quot;.</p>
+<h2>Customizing a Layer</h2>
+<p>Now that we have that in hand (feel free to just copy an example from one of the existing layer files), let's talk about how to customize an existing layer.</p>
+<p>There are really two things you probably want to do:</p>
+<ol>
+	<li>Change how the layer is painted</li>
+	<li>Change how the layer behaves when it is clicked on in the map</li>
+</ol>
+<p>The first one is accomplished by simply overriding the Paint() function in the layer.</p>
+<p>The second one is accomplished by overriding the MouseDown(), MouseMove(), and/or MouseUp() functions.</p>
+<h2>Inheritance in JavaScript </h2>
+<p>Before we go further, we need to describe a little bit about inheritance in JavaScript. If you look on the web, you'll see there is an active debate about whether or not JavaScript supports object-oriented programming and even some new constructs in JavaScript including a &quot;class&quot; keyword which, unfortunately, are not well supported. Regardless, JavaScript has the ability for you to do object-oriented programming as long as you don't mind that it's a little (OK, a lot) unorthodox. There are a variety of methods but the approach I've taken allows you to: inherit from a superclass, override selected functions, and call functions in the super class. </p>
+<p>The key to this approach is in recognizing that JavaScript &quot;classes&quot; are really just a list of functions stored in a &quot;prototype&quot;. This list can be copied and manipulated in a variety of ways. There is a &quot;this&quot; pointer for the current object, but there is no &quot;super&quot; object pointer but we can get around that.</p>
+<h2>Classes in JavaScript</h2>
+<p>First, let's review basic classes in JavaScript. Below is the code to create a new object and then a function to &quot;SetVisible(Flag)&quot;.</p>
+<pre>function CMLayer() 
+{
+	this.Visible=true; // initialize the flag to false
+}
+
+CMLayer.prototype.SetVisible=function(NewVisible)
+{
+	this.Visible=NewVisible;
+	Repaint();
+}
+</pre>
+<p>If you're not familiar with this, I recommend trying it for your self. A good approach is to create a class that puts up alerts and then change the contents of the alert.</p>
+<pre>function Animal() {}
+
+Animal.prototype.Alert() { alert(&quot;I'm a general animal&quot;); }
+</pre>
+<p>To call this we simply:</p>
+<pre>var TheObject=new Animal();
+TheObject.Alert();</pre>
+<h2>OOP In JavaScript</h2>
+<h3>The Constructor </h3>
+<p>The constructor code below provides the &quot;constructor function&quot; for a &quot;CMLayerGeoJSON&quot; object. Then, we create a new object from the superclass, Layer, and store it in prototype. This actually creates a copy of all the functions in Layer which we can now mess with. Replacing the &quot;constructor&quot; in the &quot;prototype&quot; then replaces the Layer constructor with our own.</p>
+<pre>function CMLayerGeoJSON() 
+{
+ this.FeatureStyles=null;
+ 
+ this.HTMLAttribute=null;
+}
+CMLayerGeoJSON.prototype=new CMLayer(); // inherit prototype functions from the super class</pre>
+<pre>CMLayerGeoJSON.prototype.contructor=CMLayerGeoJSON; // override the constructor to go to ours
+</pre>
+<h3>Overriding</h3>
+<p>It's easy (almost too easy) to override a function in a subclass in JavaScript, you simply define the function again. </p>
+<p>JavaScript in browsers does not have a documented way of calling the super class function when overriding. However, it is easy to just add the superclasses function to your prototype by changing its name.</p>
+
+<pre>// save the old function with a name prefixed by the super classes name
+
+CMLayerGeoJSON.prototype.Layer_SetVisible=CMLayerGeoJSON.prototype.SetVisible; </pre>
+<pre>
+// override the super classes function with a new function
+
+CMLayerGeoJSON.prototype.Layer_SetVisible=function(NewValue)
+{
+	this.Layer_SetVisible(NewValue); // call the original function in the super class
+
+	// add new code as desired
+}
+</pre>
+<h2>&nbsp;</h2>
+<p>&nbsp;</p>
+<!-- InstanceEndEditable -->
+
+<!-- end main content --></div>
+
+<!-- end main content container --></div>
+
+
+<!-- end main container --></div>
+
+<!-- begin footer container --><div id="footer_container" style="width:100%;height:175px;background-color:#333333;color:#999999">
+
+<!-- begin footer --><div id="footer" style="width:960px;margin:0 auto">
+
+<table width="600px" style="margin-top:20px">
+  <tr>
+    <td width="200px" align="left" valign="top">
+    	<h3>Humboldt State Unviersity</h3>
+        <p></p>
+    </td>
+    <td width="200px" align="left" valign="top">
+    	<h3>Created By Dr. Jim Graham</h3>
+        <p></p>
+    </td>
+    <td width="200px" align="left" valign="top">
+    	<h3>2015</h3>
+        <p></p>
+    </td>
+  </tr>
+</table>
+
+
+<!-- end footer --></div>
+
+<!-- end footer container --></div>
+
+</body>
+
+<!-- InstanceEnd --></html>
