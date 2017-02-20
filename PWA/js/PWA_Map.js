@@ -93,26 +93,7 @@ function TelemeteronEachFeature(feature, layer) {
 		var Coordinates = document.getElementById("Coordinates").innerHTML = ""+Latitude+", "+Longitude+"";	       // Displays the Coordinates of the device in the side bar				
 		var DisplayGraph = document.getElementById("graph").style.display = "block";                               // Calls the graph of device from the "Telemeters" JSON and displays in side bar	
 		jQuery("#Results").fadeIn("fast");                                                                         // Displays the result in side bar quickly
-        
-		// var TelemeterSelected = L.icon({
-			// iconUrl: 'images/radient_circles.png',           // Directory path of Telemeter icon image
-			// iconSize: [40, 40],                              // Size of icon image in width(x), and height(y), [x,y] 
-			// iconAnchor: [23, 16]                             // Positions the icon from its origin point                          
-		// }).addTo(mymap);
-		
-		
-		
-		// if (TeleName == TeleName) {
-			// circle = L.circle([Latitude, Longitude], {
-				// color: '#1a53ff',
-				// fillColor: '#3366ff',
-				// fillOpacity: 0.5,
-				// radius: 300
-			// }).addTo(mymap);
-		// }
-		// else {
-			// mymap.removeLayer(circle);
-		// }
+
 		NameSelected = feature.properties.name;                                                                    // Calls the name of device from the "Telemeters" JSON, and places in "URL" string
 		MeasurementRequest('graph')                                                                                // Calls the "MeasurementRequest" function 
 		
@@ -333,7 +314,7 @@ function MeasurementRequest(id) {
 	var RadioSelected = Measurements[SelectedMeasurement];                                                              // Calls the value of the radio button in index.html, and places in "URL" string	
 	var GetTimeDropMenu = document.getElementById("DropMenu");                                                          // Gets the element by id specifically "DropMenu" 
 	var TimeSelected = GetTimeDropMenu.value;                                                                           // Calls the value of the time selection options in index.html, and places in "URL" string                                                          
-	var URL = "http://users.humboldt.edu/jprodriguez/PWA/Measurement_Data/"+NameSelected+RadioSelected+TimeSelected+".js";  // URL that is used to call the request in local server
+	var URL = "https://github.com/jr184/Projects/tree/master/PWA/Measurement_Data/"+NameSelected+RadioSelected+TimeSelected+".js";  // URL that is used to call the request in local server
 	//var URL = "http://users.humboldt.edu/jprodriguez/PWA/PWA_Web_Python/FileRepository/Arrays/"+NameSelected+RadioSelected+TimeSelected+".js";
 	
 	var GraphTitle;                                                                                                     // Declares the title of the graph
