@@ -314,7 +314,7 @@ function MeasurementRequest(id) {
 	var RadioSelected = Measurements[SelectedMeasurement];                                                              // Calls the value of the radio button in index.html, and places in "URL" string	
 	var GetTimeDropMenu = document.getElementById("DropMenu");                                                          // Gets the element by id specifically "DropMenu" 
 	var TimeSelected = GetTimeDropMenu.value;                                                                           // Calls the value of the time selection options in index.html, and places in "URL" string                                                          
-	var URL = "https://github.com/jr184/Projects/tree/master/PWA/Measurement_Data/"+NameSelected+RadioSelected+TimeSelected+".js";  // URL that is used to call the request in local server
+	var URL = "https://jr184.github.io/Projects/PWA/Measurement_Data/"+NameSelected+RadioSelected+TimeSelected+".js";  // URL that is used to call the request in local server
 	//var URL = "http://users.humboldt.edu/jprodriguez/PWA/PWA_Web_Python/FileRepository/Arrays/"+NameSelected+RadioSelected+TimeSelected+".js";
 	
 	var GraphTitle;                                                                                                     // Declares the title of the graph
