@@ -526,6 +526,11 @@ hr {
 	border-top: 1px dotted #E1E1E1; 
 	width: 300px;
 }
+.break {
+	margin-top: 8px;
+	border-bottom: 1px dotted #E1E1E1;
+	width: 300px;
+}
 
 /* Media Queries
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
