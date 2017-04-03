@@ -10,7 +10,7 @@
 /* Zoom button images
 	–––––––––––––––––––––––––––––––––––––––––––––––––– */	
 .leaflet-bar .leaflet-control-zoom-out {
-	background-image: url("../images/zoomout-01.PNG");
+	background-image: url("../images/zoomout-01.png");
 	background-image: no-repeat;
 	background-size: 100%;
 	background-position: 0 0;
@@ -20,7 +20,7 @@
 	z-index: 1;
 }
 .leaflet-bar .leaflet-control-zoom-in {
-	background: url("../images/zoomin-01.PNG");
+	background: url("../images/zoomin-01.png");
 	background-image: no-repeat;
 	background-size: 100%;
 	background-position: 0 0;
@@ -33,7 +33,7 @@
 	–––––––––––––––––––––––––––––––––––––––––––––––––– */
 	
 .leaflet-bar .leaflet-control-zoom-out:hover {
-	background-image: url("../images/zoomout-01.PNG");
+	background-image: url("../images/zoomout-01.png");
 	background-image: no-repeat;
 	background-size: 100%;
 	background-position: 0 0;
@@ -43,7 +43,7 @@
 	z-index: 1;
 }
 .leaflet-bar .leaflet-control-zoom-in:hover {
-	background-image: url("../images/zoomin-01.PNG");
+	background-image: url("../images/zoomin-01.png");
 	background-image: no-repeat;
 	background-size: 100%;
 	background-position: 0 0;
