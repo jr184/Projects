@@ -196,7 +196,7 @@ var doorsIcon = L.icon({
 
 //BUSES
 var busIcon = L.icon({
-	iconUrl: 'images/BusStop_Map.PNG',
+	iconUrl: 'images/BusStop_Map.png',
 	iconSize:     [20, 20], // size of the icon
 	iconAnchor:   [13, 13], // point of the icon which will correspond to marker's location
 	popupAnchor:  [0, -20], // point from which the popup should open relative to the iconAnchor 
@@ -239,7 +239,7 @@ var InterLabIcon = L.icon({
 });  
 
 var KioskIcon = L.icon({
-	iconUrl: 'images/Printing_Kiosk_Map.PNG',
+	iconUrl: 'images/Printing_Kiosk_Map.png',
 	iconSize:     [20, 20],  
 	iconAnchor:   [13, 13],  
 	popupAnchor:  [0, -20],  
@@ -470,133 +470,133 @@ var EAPBSSYellowIcon = L.icon({
 
 //*************Beginning of Rally Points*************
 var RallyBlackIcon = L.icon({                          
-	iconUrl: 'images/Rally8.PNG',
+	iconUrl: 'images/Rally8.png',
 	iconSize:     [14, 14],  
 	iconAnchor:   [13, 13],  
 	popupAnchor:  [0, -20],  
 });
 
 var RallyCreekGreekIcon = L.icon({
-	iconUrl: 'images/Rally11.PNG',
+	iconUrl: 'images/Rally11.png',
 	iconSize:     [14, 14],  
 	iconAnchor:   [13, 13],  
 	popupAnchor:  [0, -20],  
 });
 
 var RallyCyanIcon = L.icon({
-	iconUrl: 'images/Rally1.PNG',
+	iconUrl: 'images/Rally1.png',
 	iconSize:     [14, 14],  
 	iconAnchor:   [13, 13],  
 	popupAnchor:  [0, -20],  
 });
 
 var RallyFWHIcon = L.icon({
-	iconUrl: 'images/Rally3.PNG',
+	iconUrl: 'images/Rally3.png',
 	iconSize:     [14, 14],  
 	iconAnchor:   [13, 13],  
 	popupAnchor:  [0, -20],  
 });
 
 var RallyGreenGymsIcon = L.icon({
-	iconUrl: 'images/Rally16.PNG',
+	iconUrl: 'images/Rally16.png',
 	iconSize:     [14, 14],  
 	iconAnchor:   [13, 13],  
 	popupAnchor:  [0, -20],  
 });
 
 var RallyGreyIcon = L.icon({
-	iconUrl: 'images/Rally15.PNG',
+	iconUrl: 'images/Rally15.png',
 	iconSize:     [14, 14],  
 	iconAnchor:   [13, 13],  
 	popupAnchor:  [0, -20],  
 });
 
 var RallyLightBlueIcon = L.icon({
-	iconUrl: 'images/Rally10.PNG',
+	iconUrl: 'images/Rally10.png',
 	iconSize:     [14, 14],  
 	iconAnchor:   [13, 13],  
 	popupAnchor:  [0, -20],  
 });
 
 var RallyLightBrownIcon = L.icon({
-	iconUrl: 'images/Rally9.PNG',
+	iconUrl: 'images/Rally9.png',
 	iconSize:     [14, 14],  
 	iconAnchor:   [13, 13],  
 	popupAnchor:  [0, -20],  
 });
 
 var RallyLightGreenIcon = L.icon({
-	iconUrl: 'images/Rally6.PNG',
+	iconUrl: 'images/Rally6.png',
 	iconSize:     [14, 14],  
 	iconAnchor:   [13, 13],  
 	popupAnchor:  [0, -20],  
 });
 
 var RallyOrangeIcon = L.icon({
-	iconUrl: 'images/Rally2.PNG',
+	iconUrl: 'images/Rally2.png',
 	iconSize:     [14, 14],  
 	iconAnchor:   [13, 13],  
 	popupAnchor:  [0, -20],  
 });
 
 var RallyPlantYellowIcon = L.icon({
-	iconUrl: 'images/Rally18.PNG',
+	iconUrl: 'images/Rally18.png',
 	iconSize:     [14, 14],  
 	iconAnchor:   [13, 13],  
 	popupAnchor:  [0, -20],  
 });
 
 var RallyPurpleCermIcon = L.icon({
-	iconUrl: 'images/Rally12.PNG',
+	iconUrl: 'images/Rally12.png',
 	iconSize:     [14, 14],  
 	iconAnchor:   [13, 13],  
 	popupAnchor:  [0, -20],  
 });
 
 var RallyRedIcon = L.icon({
-	iconUrl: 'images/Rally4.PNG',
+	iconUrl: 'images/Rally4.png',
 	iconSize:     [14, 14],  
 	iconAnchor:   [13, 13],  
 	popupAnchor:  [0, -20],  
 });
 
 var RallySBSIcon = L.icon({
-	iconUrl: 'images/Rally13.PNG',
+	iconUrl: 'images/Rally13.png',
 	iconSize:     [14, 14],  
 	iconAnchor:   [13, 13],  
 	popupAnchor:  [0, -20],  
 });
 
 var RallySciencePurpleIcon = L.icon({
-	iconUrl: 'images/Rally14.PNG',
+	iconUrl: 'images/Rally14.png',
 	iconSize:     [14, 14],  
 	iconAnchor:   [13, 13],  
 	popupAnchor:  [0, -20],  
 });
 
 var RallyToddlerIcon = L.icon({
-	iconUrl: 'images/Rally19.PNG',
+	iconUrl: 'images/Rally19.png',
 	iconSize:     [14, 14],  
 	iconAnchor:   [13, 13],  
 	popupAnchor:  [0, -20],  
 });
 
 var RallyVanMatreIcon = L.icon({
-	iconUrl: 'images/Rally7.PNG',
+	iconUrl: 'images/Rally7.png',
 	iconSize:     [14, 14],  
 	iconAnchor:   [13, 13],  
 	popupAnchor:  [0, -20],  
 });
 
 var RallyVioletIcon = L.icon({
-	iconUrl: 'images/Rally5.PNG',
+	iconUrl: 'images/Rally5.png',
 	iconSize:     [14, 14],  
 	iconAnchor:   [13, 13],  
 	popupAnchor:  [0, -20],  
 });
 
 var RallyYellowBSSIcon = L.icon({
-	iconUrl: 'images/Rally17.PNG',
+	iconUrl: 'images/Rally17.png',
 	iconSize:     [14, 14],  
 	iconAnchor:   [13, 13],  
 	popupAnchor:  [0, -20],  
