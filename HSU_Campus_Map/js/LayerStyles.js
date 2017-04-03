@@ -26,49 +26,49 @@ var BuildingStyles = {
 //PARKING STYLES
 /*General*/
 var G1Icon = L.icon({
-	iconUrl: 'images/G1.png',// Image is within the "images" folder, as well as the rest of the images below 
+	iconUrl: 'images/G1.PNG',// Image is within the "images" folder, as well as the rest of the images below 
 	iconSize:     [28, 20],  // size of the icon
 	iconAnchor:   [13, 13],  // point of the icon which will correspond to marker's location
 	popupAnchor:  [0, -20],  // point from which the popup should open relative to the iconAnchor
 });
 
 var G11Icon = L.icon({
-	iconUrl: 'images/G11.png',
+	iconUrl: 'images/G11.PNG',
 	iconSize:     [32, 20], 
 	iconAnchor:   [13, 13], 
 	popupAnchor:  [0, -20], 
 });
 
 var G12Icon = L.icon({
-	iconUrl: 'images/G12.png',
+	iconUrl: 'images/G12.PNG',
 	iconSize:     [37, 20], 
 	iconAnchor:   [13, 13], 
 	popupAnchor:  [0, -20], 
 });
 
 var G13Icon = L.icon({
-	iconUrl: 'images/G13.png',
+	iconUrl: 'images/G13.PNG',
 	iconSize:     [37, 20], 
 	iconAnchor:   [13, 13], 
 	popupAnchor:  [0, -20], 
 });
 
 var G14Icon = L.icon({
-	iconUrl: 'images/G14.png',
+	iconUrl: 'images/G14.PNG',
 	iconSize:     [37, 20], 
 	iconAnchor:   [13, 13], 
 	popupAnchor:  [0, -20], 
 });
 
 var G15Icon = L.icon({
-	iconUrl: 'images/G15.png',
+	iconUrl: 'images/G15.PNG',
 	iconSize:     [37, 20], 
 	iconAnchor:   [13, 13], 
 	popupAnchor:  [0, -20], 
 });
 
 var G16Icon = L.icon({
-	iconUrl: 'images/G16.png',
+	iconUrl: 'images/G16.PNG',
 	iconSize:     [37, 20],
 	iconAnchor:   [15, 23], 
 	popupAnchor:  [0, -20], 
