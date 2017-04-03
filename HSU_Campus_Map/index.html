@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<!-- Basic Page Needs––––––––––––––––––––––––––––––––––––––––––––––––––-->
+<meta charset="utf-8">
+<title>HSU Campus Map</title>                                                                                                   <!-- Title of the tab -->
+<link rel="shortcut icon" href="images/favicon.png" type="image/x-icon"/>                                                       <!-- This is the icon for the Campus Map Tab -->
+<meta name="description" content="">
+<meta name="author" content="">
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Mobile Specific Metas––––––––––––––––––––––––––––––––––––––––––––––––––-->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- CSS––––––––––––––––––––––––––––––––––––––––––––––––––-->
+<link rel="stylesheet" href="css/normalize.css">                                                                                <!-- This is where the help functions are for skeleton -->
+<link rel="stylesheet" href="css/skeleton.css">                                                                                 <!-- This is where the page becomes responsive for a smaller screen -->
+<link rel="stylesheet" type="text/css" href="css/index.css"/>                                                                   <!-- This is where the majority of the styles of the web page is located, along with the accordion -->
+<link rel="stylesheet" type="text/css" href="css/component.css"/>                                                               <!-- This is where the styles for both the left and bottom slide menus are located  -->
+<link rel="stylesheet" type="text/css" href="css/RemainingLeafletStyles.css"/>                                                  <!-- The majority of the leaflet styles were placed within the <style> tags of this page, and is relocated in this file --> 
+<!-- <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v0.0.4/leaflet.fullscreen.css' rel='stylesheet'/>   -->   <!-- CSS styles for the Mapbox api plugins  --> 
+<link href='css/leaflet.fullscreen.css' rel='stylesheet'/>                                                                      <!-- CSS styles for the Mapbox api plugins  --> 
+<!-- <link href='css/mapbox.css' rel='stylesheet'/>   -->                                                                              <!-- CSS styles for the Mapbox api plugins  -->
+<link href='https://api.mapbox.com/mapbox.js/v2.2.3/mapbox.css' rel='stylesheet'/>                                              <!-- CSS styles for the Mapbox api plugins (BY TAKING THIS OUT, THE "X" BUTTON DOESN'T SHOW, LEAVE) -->
+
+<!-- Leaflet & Mapbox Scripts––––––––––––––––––––––––––––––––––––––––––––––––––-->
+<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no'/>
+<script src='https://api.mapbox.com/mapbox.js/v2.2.3/mapbox.js'></script>
+<!-- <script src='js/mapbox.js'></script>                                                                                         <!-- Calls on mapbox api to communicate Leaflet with Mapbox for the base map --> -->
+<script src='js/Leaflet.fullscreen.min.js'></script>                                                                         <!-- Calls on mapbox api to communicate Leaflet with Mapbox for the base map -->
+
+<!-- ****NOTE:**** These are the original files of the leaflet and mapbox up above! -->
+<!-- Holding onto these files for back up material -->
+<!-- <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v0.0.4/Leaflet.fullscreen.min.js'></script>  -->
+<!-- <script src='https://api.mapbox.com/mapbox.js/v2.2.3/mapbox.js'></script>  -->                                          <!-- Calls on mapbox api to communicate Leaflet with Mapbox for the base map -->
+
+<!--JQuery Script-------------------------------------------->
+<script src="js/jquery.min.js"></script>                                                                                     <!-- JQuery library used to communicate the layers on and off, and have the accordion function --> 
+
+<!-- Scripts––––––––––––––––––––––––––––––––––––––––––––––––––-->
+<script src="js/SearchUtil.js"></script> <!-- search utility -->
+<script src='js/Buildings.js'></script> <!-- JSON outlines for buildings --->
+<script src='js/BuildingPhraseList.js'></script> <!--- building phrase list -->
+<!-- <script src='JSON/Buildings.js'></script>      -->                                                                               <!-- JSON outlines for buildings --->
+
+<!-- Leave remaining Leaflet Styles in the style tags. This style won't work in an external CSS file. -->
+<style>
+body {
+	margin:0;
+	padding:0;
+}
+/* Zoom button images
+	–––––––––––––––––––––––––––––––––––––––––––––––––– */
+
+.leaflet-bar .leaflet-control-zoom-out {
+	background-image: url("images/zoomout-01.png");
+	background-image: no-repeat;
+	background-size: 100%;
+	background-position: 0 0;
+	opacity: 1;
+	border: 0px;
+	border-radius: 0px;
+	z-index: 1;
+}
+/* Removes Mapbox Credit image
+	–––––––––––––––––––––––––––––––––––––––––––––––––– */
+.mapbox-logo-true {
+	background-image: none;
+}
+</style>
+
+<!-----------------------This is the Accordion toggle switch--------------------->
+<script type="text/javascript">
+/**
+* Accordion Toggle Switch
+*/
+	$(document).ready(function(){
+		$(".accordion .accordion-content").slideUp();                            <!-- Calls on the classes "accordion" and "accordion-content" to slide up -->
+		$(".accordion .accordion-title").click(function(){                       <!-- Toggles the accordion on and off with slideToggle fast -->
+			$(this).next(".accordion .accordion-content").slideToggle("fast");
+		})
+	})
+	
+/**
+* Does search when button clicked
+*/
+function DoSearch()
+{
+	var SearchPhraseElement=document.getElementById("SearchText");
+	
+	var Element=document.getElementById("SearchResultsContainer");
+	Element.innerHTML="";
+	
+	var SearchPhrase = SearchPhraseElement.value;
+	SearchPhrase=SearchPhrase.toLowerCase();
+	
+	var Result=SearchPhrases(SearchPhrase);
+	
+	// add partial mateches to exact matches=
+	
+	var output = "";
+	for (var i=0;i<Result.length;i++)
+	{
+		var index = Result[i];
+		output+=BuildingPhraseList[index][0]+"<br>";
+//		output+=Result[i]+", "+BuildingPhraseList[index][0]+"<br>";
+	}
+	Element.innerHTML=output;
+}
+</script>
+</head>
+<body>
+<!---------------------------------------------------------------------––––––––––––––––––––––––––––––––––––––––––––––->
+<!------------------------------------------------ Primary Page Layout ––––––––––––––––––––––––––––––––––––––––––––––->
+<!---------------------------------------------------------------------––––––––––––––––––––––––––––––––––––––––––––––->
+
+<!-- This is where the HTML of the popup is located -->
+<div class='custom-popup' id='map'></div>                         
+
+<!-- This is where the zoom controls are located on the map -->
+<div class="zoom-container">
+	<div class="zoom-controls"> <img src="images/zoomin-01.png" alt="zoomin" style="width: 28px; height: auto"> <img src="images/zoomout-01.png" alt="zoomout" style="width: 28px; height: auto"> <img src="images/layers-01.png" alt="zoomout" style="width: 28px; height: auto"> </div>
+</div>
+
+<!----------------------------------------------------------------------–––––––––––––------–––––––––––––––––––––––––––––––––>
+<!------------------------------------------------------ Start of Menus ––––––––––––––––––––––––––––––––––––––––––––––––––--> 
+<!---------------------------------------------------------------------–––––––––––––------–––––––––––––––––––––––––––––––––->
+
+<!-- Horizontal Menu containing information about the map, who created it, and who to contact with questions/comments ––––-->
+<nav class="cbp-spmenu cbp-spmenu-horizontal cbp-spmenu-bottom" id="cbp-spmenu-s4">
+	<p style="color: white; margin-left: 22px; margin-right: 22px; margin-top: 24px; line-height: normal; font-size: 15px;">
+		<!-- Credit info. on map -->
+		<strong style="color: #f6f3af;">ABOUT THE MAP</strong><br>
+		This version of the campus map was updated and completed by Jordan Adnir, Colby Peffer, and Joshua Rodriguez in Fall 2016 under the guidance and direction of Professor James Graham. Original design and 
+		development was by Jordan Adair, Dylan Hills, Monique Gil, and Aaron Taveras in Fall 2015. Please note that the map undergoes periodic updates as buildings and spaces on campus change.<br>
+		<br>
+		<!-- Browser Requirement Info. -->
+		<strong style="color: #f6f3af;">BROWSER REQUIREMENTS</strong><br>
+		The map will run on any relatively newer version of Chrome, Firefox, Opera, and Safari, as long as Javascript is enabled (it is by default.) The map also runs on Internet Explorer back to version 8.<br>
+		<br>
+		
+		<!-- Survey Link is located here, specified by whoever made it -->
+		<strong style="color: #f6f3af;">GIVE FEEDBACK</strong><br>
+		If you have trouble using the map or if you have any suggestions for improvements, please fill out the following 
+		<a class="SurveyLink" href="https://docs.google.com/forms/d/1w-HHtasBZhwJLU2Qe1B5F5vmQ52vp44T6p6epwCT3rA/viewform?usp=send_form">form.</a>
+	</p>
+</nav>
+
+<!-- Vertical Menu containg layers and markers that can be toggled on and off –––––––––––––––––––––––––––––––––––––––––––-->
+<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left" id="cbp-spmenu-s1"> <!-- DIVS specifying IDs and classes for vertical and horizontal menus, located in the new_component.css -->
+	
+		<!-- This is the search bar infomation displayed above the search bar -->
+		<h3 style="color: #f6f3af; margin-left: 35px; margin-right: 18px; margin-top: 35px; margin-bottom: 25px;">SEARCH...</h3>
+		<h5 style="color: white; margin-left: 35px; margin-right: 35px; margin-top: -20px;">Search for buildings, departments, and/or event spaces by their abbreviation, partial or full name. Ex. KBR is Buchanan Room</h5>
+		
+		<!-- Possible Modern Search Bar Options: https://colorlib.com/wp/free-css3-html5-search-form-examples/ -->
+		
+		<!-- Start of Search Bar  -->
+		<form id="searchbox" method="get" action="/search">                                  <!-- Search bar Form --> 
+			<input id="SearchText" name="q" type="text" size="15" placeholder="TYPE HERE" /> <!-- This is where the user types in buildings, event spaces, etc. for search results -->
+			<input id="button-submit" type="button" value="SEARCH" onclick="DoSearch()"/> <!-- ***ENTER SEARCH BAR FUNCTION HERE!!!*** -->
+		</form>
+		<!-- <div  id="Results" style="color: #f6f3af; margin-left: 35px; margin-right: 18px; margin-top: 35px; margin-bottom: 25px;"><div> -->
+		<!-- ******This is where the Search Results will be popup from the search bar function****** -->
+		<!-- **************************************TESTING MATERIAL********************************* -->
+		<!-- This is where the search results from the input id="SearchText" would be displayed -->		                                                
+		<!-- Styles are located in the new_index.css file -->		
+<!-- 		<div class="SearchResultsContainer"> 
+			<ul>                                                                             
+				<li>
+					<a href="#">Results 1</a>
+				</li>
+				<li>
+					<a href="#">Results 2</a>
+				</li>
+				<li>
+					<a href="#">Results 3</a>
+				</li>
+				<li>
+					<a href="#">Results 4</a>
+				</li>				
+			</ul>
+		</div> -->
+		<!-- End of Search Bar  -->
+		
+	 <!-- Divider Line in Nav Bar, styles located in new_index.css --> 
+	 <div class="break3">
+		<hr />
+	 </div>
+	
+	<!--------------------------------------ACCORDION SECTION NAV BAR START------------------------------------------>
+	<div class="accordion">	
+	<!-- *********This is a potential idea suggested by Kristen for the TOUR option, will implement, depending on time********* -->
+	<!-- 		<a class="accordion-title" href="#">TOUR<img class="arrowimage" src="images/arrow-01.png" alt="arrow"></a>
+			<div class="accordion-content">  
+				<div class="CheckBoxHeight"><input type="checkbox" name="Tour" id=""><span class="CheckboxText">Student Business Services Building</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Tour" id=""><span class="CheckboxText">College Creek Complex</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Tour" id=""><span class="CheckboxText">Harry Griffith Hall</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Tour" id=""><span class="CheckboxText">Natural Resources</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Tour" id=""><span class="CheckboxText">Forestry</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Tour" id=""><span class="CheckboxText">Schatz Energy Research Center</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Tour" id=""><span class="CheckboxText">Campus Center for Appropriate Tech.</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Tour" id=""><span class="CheckboxText">Behavioral & Social Sciences</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Tour" id=""><span class="CheckboxText">Science Complex</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Tour" id=""><span class="CheckboxText">Wildlife & Fisheries</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Tour" id=""><span class="CheckboxText">Student Recreation Center</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Tour" id=""><span class="CheckboxText">Recreation & Wellness Center</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Tour" id=""><span class="CheckboxText">Kinesiology & Athletics Building</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Tour" id=""><span class="CheckboxText">Redwood Bowl</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Tour" id=""><span class="CheckboxText">Founders Hall</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Tour" id=""><span class="CheckboxText">University Center</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Tour" id=""><span class="CheckboxText">Siemens Hall</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Tour" id=""><span class="CheckboxText">Music Complex</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Tour" id=""><span class="CheckboxText">Art Buildings</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Tour" id=""><span class="CheckboxText">John Van Duzer Theatre</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Tour" id=""><span class="CheckboxText">Gist Hall</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Tour" id=""><span class="CheckboxText">Ceramics & Sculpture Labs</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Tour" id=""><span class="CheckboxText">MultiCultural Center</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Tour" id=""><span class="CheckboxText">Warren House</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Tour" id=""><span class="CheckboxText">Library</span></input></div>	
+				<div class="CheckBoxHeight"><input type="checkbox" name="Tour" id=""><span class="CheckboxText">Youth Educational Services</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Tour" id=""><span class="CheckboxText">Student Health Center</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Tour" id=""><span class="CheckboxText">Nelson Hall</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Tour" id=""><span class="CheckboxText">Jolly Giant Commons & Residence Hall</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Tour" id=""><span class="CheckboxText">Library Circle</span></input></div>				
+			</div> -->	
+		<a class="accordion-title" href="#">RESIDENCE HALL<img class="arrowimage" src="images/arrow-01.png" alt="arrow"></a>
+			<div class="accordion-content">
+				<div class="CheckBoxHeight"><input type="checkbox" name="Dorm" id="All" class="CheckboxContent"><span class="CheckboxText">All Residence Halls</span></input></div>
+				<div class="CheckBoxTitle"><strong>Campus Apartments</strong></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Dorm" id="Apartments"><span class="CheckboxText">Campus Apartments</span></input></div>
+				<div class="CheckBoxTitle"><strong>Canyon Complex</strong></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Dorm" id="Alder"><span class="CheckboxText">Alder</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Dorm" id="Cedar"><span class="CheckboxText">Cedar</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Dorm" id="Chinquapin"><span class="CheckboxText">Chinquapin</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Dorm" id="Hem"><span class="CheckboxText">Hemlock</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Dorm" id="Madrone"><span class="CheckboxText">Madrone</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Dorm" id="Maple"><span class="CheckboxText">Maple</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Dorm" id="Pepper"><span class="CheckboxText">Pepperwood</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Dorm" id="Tan"><span class="CheckboxText">Tan Oak</span></input></div>
+				<div class="CheckBoxTitle"><strong>College Creek Complex</strong></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Dorm" id="DN"><span class="CheckboxText">Del Norte</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Dorm" id="Mend"><span class="CheckboxText">Mendocino</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Dorm" id="Shasta"><span class="CheckboxText">Shasta</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Dorm" id="Trinity"><span class="CheckboxText">Trinity</span></input></div>
+				<div class="CheckBoxTitle"><strong>Creekview Complex</strong></div> 
+				<div class="CheckBoxHeight"><input type="checkbox" name="Dorm" id="Lounge"><span class="CheckboxText">Creekside Lounge</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Dorm" id="Fern"><span class="CheckboxText">Fern</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Dorm" id="Juniper"><span class="CheckboxText">Juniper</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Dorm" id="Laurel"><span class="CheckboxText">Laurel</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Dorm" id="Willow"><span class="CheckboxText">Willow</span></input></div>
+				<div class="CheckBoxTitle"><strong>Cypress Hall</strong></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Dorm" id="Cypress"><span class="CheckboxText">Cypress Hall</span></input></div>
+				<div class="CheckBoxTitle"><strong>The Hill</strong></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Dorm" id="Redwood"><span class="CheckboxText">Redwood Hall</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Dorm" id="Sunset"><span class="CheckboxText">Sunset Hall</span></input></div>
+			</div>
+		<a class="accordion-title" href="#">PARKING<img class="arrowimage" src="images/arrow-01.png" alt="arrow"></a>
+			<div class="accordion-content">  
+				<div class="CheckBoxHeight"><input type="checkbox" name="Parking" id="General"><span class="CheckboxText">General</span><img class="CheckBoxImages" src="images/GeneralParking.png" alt="General"></img></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Parking" id="Faculty"><span class="CheckboxText">Staff Parking</span><img class="CheckBoxImages" src="images/StaffParking.png" alt="Faculty"></img></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Parking" id="Resident"><span class="CheckboxText">Resident</span><img class="CheckBoxImages" src="images/ResidentParking.png" alt="Resident"></img></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Parking" id="accessparking"><span class="CheckboxText">Accessibility Parking</span><img class="CheckBoxImages" src="images/AccessParking.png" alt="Handicapp"></img></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Parking" id="PermitDispenser"><span class="CheckboxText">Permit Dispenser</span><img class="CheckBoxImages" src="images/ParkingDespenser.png" alt="Faculty"></img></input></div>	
+				<div class="break"></div>				
+			</div>
+		<a class="accordion-title" href="#">DINING<img class="arrowimage" src="images/arrow-01.png" alt="arrow"></a>					
+			<div class="accordion-content">  
+				<div class="CheckBoxHeight"><input type="checkbox" name="Dining" id="dining"><span class="CheckboxText">Dining/Market</span><img class="CheckBoxImages" src="images/Dining_Legend.png" alt="Dining"></img></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Dining" id="coffee"><span class="CheckboxText">Coffee</span><img class="CheckBoxImages" src="images/Coffee_Legend.png" alt="Coffee"></img></input></div>		
+				<div class="break"></div>
+			</div>
+		<a class="accordion-title" href="#">ACCESSIBILITY<img class="arrowimage" src="images/arrow-01.png" alt="arrow"></a>
+			<div class="accordion-content">
+				<div class="CheckBoxHeight"><input type="checkbox" name="Accessibility" id="elevators"><span class="CheckboxText">Elevator</span><img class="CheckBoxImages" src="images/elevators-01.png" alt="Elevator"></img></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Accessibility" id="doors"><span class="CheckboxText">Automatic Doors</span><img class="CheckBoxImages" src="images/AutomaticDoor.png" alt="Automatic Doors"></img></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Accessibility" id="access"><span class="CheckboxText">Accessible Pathway</span><img class="CheckBoxImages" src="images/AccessPath.png" alt="Accessible Path"></img></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Accessibility" id="TDD"><span class="CheckboxText">TDD</span><img class="CheckBoxImages" src="images/TDD.png" alt="TDD"></img></input></div>
+				<div class="break"></div>			
+			</div>
+		<a class="accordion-title" href="#">BUSES<img class="arrowimage" src="images/arrow-01.png" alt="arrow"></a>
+			<div class="accordion-content">
+				<div class="CheckBoxHeight"><input type="checkbox" name="Buses" id="bus" value="bus"><span class="CheckboxText">Bus Stops</span><img class="CheckBoxImages" src="images/BusStop_Legend.png" alt="Bus Stops"></img></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Buses" id="GoldRoute"><span class="CheckboxText">Gold Route</span><img class="CheckBoxImages" src="images/GoldRoute.png" alt="Gold"></img></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Buses" id="RedRoute"><span class="CheckboxText">Red Route</span><img class="CheckBoxImages" src="images/RedRoute.png" alt="Red"></img></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Buses" id="OrangeRoute"><span class="CheckboxText">Orange Route</span><img class="CheckBoxImages" src="images/OrangeRoute.png" alt="Orange"></img></input></div>
+				<div class="DisclaimerStyles"><p>*<strong>DISCLAIMER</strong>: Bus stops are subject to change periodically depending on the time of the year.</p></div>					
+				<div class="break"></div>
+			</div>
+		<a class="accordion-title" href="#">COMPUTER LABS & PRINTING<img class="arrowimage" src="images/arrow-01.png" alt="arrow"></a>
+			<div class="accordion-content">
+				<div class="CheckBoxHeight"><input type="checkbox" name="Computer Labs" id="GenLabs"><span class="CheckboxText">General Labs</span><img src="images/General_Comp_Legend.png" alt="General Computer Labs" style="background-repeat: no repeat; background-position: right top; width: 20px; height: 20px; float: right;"></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Computer Labs" id="InterLabs"><span class="CheckboxText">Interdisciplinary Labs</span><img src="images/Inter_Comp_Legend.png" alt="Interdisplinary Computer Labs" style="background-repeat: no repeat; background-position: right top; width: 20px; height: 20px; float: right;"></img></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Computer Labs" id="PrintingKiosk"><span class="CheckboxText">Student Print Locations</span><img src="images/Printing_Kiosk_Legend.png" alt="Interdisplinary Computer Labs" style="background-repeat: no repeat; background-position: right top; width: 20px; height: 20px; float: right;"></img></input></div>
+					
+					<!-- Start of Printing Kiosk Legend in Accordion -->
+					<div class="PrintLegend"> 
+						<table border="0" class="LegendTable" width="300px">
+							<tr style="padding-bottom: 10px;">
+								<td class="tdLegend">
+									<img class="LegendImages" src="images/QuickPrintKiosk.png" alt="Quick Print Kiosk"/>
+								</td>
+								<td class="LegendBuffer">
+									<p class="ImageTitle">Quick Print Kiosk</p>
+									<p class="LegendInfo">A lab computer and printer where you can edit and print documents using c-card funds. Limit 10 minutes per session.</p>
+								</td>						
+							</tr>
+
+							<tr>
+								<td>
+									<img class="LegendImages" src="images/Black&WhitePrinter.png" alt="Black & White Printer"/>
+								</td>
+								<td class="LegendBuffer">
+									<p class="ImageTitle">Wireless Accessible Black & White Printers</p>
+								</td>						
+							</tr>				
+						
+							<tr>
+								<td>
+									<img class="LegendImages" src="images/ColorPrinter.png" alt="Color Printer"/>
+								</td>
+								<td>
+									<p class="ImageTitle">Wireless Accessible Color Printers</p>
+								</td>						
+							</tr>
+						
+							<tr>
+								<td>
+									<img class="LegendImages" src="images/OpenLab2.png" alt="Open Lab"/>
+								</td>
+								<td style="padding: 0px;">
+									<p class="ImageTitle">Open Lab</p>
+								</td>						
+							</tr>					
+						</table> 
+						
+						<div><p style="font-size: 12px; text-align: center;">Wireless printer installers are available at: <a class="PrintWifi" style="padding: 0px; color: #FFFFFF;" href="https://www2.humboldt.edu/its/payforprint-wifi" target="_blank">humboldt.edu/its/payforprint-wifi</a></p></div>	
+					</div>
+					<!-- End of Printing Kiosk Legend in Accordion -->
+				<div class="break"></div>	
+			</div>
+		<a class="accordion-title" href="#">RECREATION<img class="arrowimage" src="images/arrow-01.png" alt="arrow"></a>
+			<div class="accordion-content">
+				<div class="CheckBoxHeight"><input type="checkbox" name="Recreation" id="BasketBall"><span class="CheckboxText">Basketball Courts</span><img  class="CheckBoxImages" src="images/New_BasketBall.png" alt="BasketBall Courts"></img></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Recreation" id="DiscGolf"><span class="CheckboxText">Disc Golf</span><img class="CheckBoxImages" src="images/DiscGolf.png" alt="Disc Golf"></img></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Recreation" id="Fitness"><span class="CheckboxText">Fitness Center</span><img  class="CheckBoxImages" src="images/New_FitnessCenter.png" alt="Fitness Center"></img></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Recreation" id="Football" onclick="FootballPanTo(this)"><span class="CheckboxText">Football Stadium</span><img  class="CheckBoxImages" src="images/New_Football.png" alt="Football"></img></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Recreation" id="Soccer" onclick="SoccerPanTo(this)"><span class="CheckboxText">Soccer Fields</span><img  class="CheckBoxImages" src="images/soccer.png" alt="Soccer Field"></img></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Recreation" id="Softball" onclick="SoftballPanTo(this)"><span class="CheckboxText">Softball Field</span><img  class="CheckBoxImages" src="images/Softball.png" alt="Softball Field"></img></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Recreation" id="Swimming" onclick="SwimmingPanTo(this)"><span class="CheckboxText">Swimming Pool</span><img  class="CheckBoxImages" src="images/New_Swimming.png" alt="Swimming Pool"></img></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Recreation" id="VolleyBall"><span class="CheckboxText">Volleyball Courts</span><img  class="CheckBoxImages" src="images/New_volleyball.png" alt="Volleyball Courts"></img></input></div>
+				<div class="break"></div>
+			</div>
+		<a class="accordion-title" href="#">STUDENT SERVICES<img class="arrowimage" src="images/arrow-01.png" alt="arrow"></a>
+			<div class="accordion-content">
+				<div class="CheckBoxHeight"><input type="checkbox" name="Resources" id="Academic" onclick="AcademicPanTo(this)"><span class="CheckboxText">Academic & Career Advising Center</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Resources" id="Admissions" onclick="AdmissionPanTo(this)"><span class="CheckboxText">Office of Admissions</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Resources" id="FoodPantry" onclick="CampusFoodPanTo(this)"><span class="CheckboxText">Campus Food Pantry</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Resources" id="Cashier" onclick="CashierPanTo(this)"><span class="CheckboxText">Cashier's Office</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Resources" id="Financial" onclick="FinancialPanTo(this)"><span class="CheckboxText">Financial Aid</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Resources" id="HPL" onclick="HPLPanTo(this)"><span class="CheckboxText">Human Performance Lab</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Resources" id="Language" onclick="LanguagePanTo(this)"><span class="CheckboxText">Language Lab</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Resources" id="Learning" onclick="LearningPanTo(this)"><span class="CheckboxText">Learning & Testing Center</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Resources" id="Registrar" onclick="RegistrarPanTo(this)"><span class="CheckboxText">Office of the Registrar</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Resources" id="PostOffices" onclick="PostOfficePanTo(this)"><span class="CheckboxText">Post Offices</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Resources" id="RecCenter" onclick="RecCenterPanTo(this)"><span class="CheckboxText">Recreation & Wellness Center</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Resources" id="Health" onclick="HealthPanTo(this)"><span class="CheckboxText">Student Health Center</span></input></div>				
+				<div class="CheckBoxHeight"><input type="checkbox" name="Resources" id="StudentDis" onclick="StudentDisPanTo(this)"><span class="CheckboxText">Student Disability Resource Center</span></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Resources" id="Writing" onclick="WritingPanTo(this)"><span class="CheckboxText">Writing Center</span></input></div>
+				<div class="break"></div>
+			</div>
+		<a class="accordion-title" href="#">EMERGENCY SERVICES<img class="arrowimage" src="images/arrow-01.png" alt="arrow"></a>
+			<div class="accordion-content">
+				<div class="CheckBoxHeight"><input type="checkbox" name="Emergency" id="Police" onclick="PolicePanTo(this)"><span class="CheckboxText">Police Station</span><img class="CheckBoxImages" src="images/Official_Police.png" alt="Police"></img></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Emergency" id="EAP"><span class="CheckboxText">Appropriate Building</span><img  class="CheckBoxImages" src="images/AppropriateBuilding_Black.png" alt="ConnectedEAP"></img></input></div>
+				<div class="CheckBoxHeight"><input type="checkbox" name="Emergency" id="Rally"><span class="CheckboxText">Rally Point</span><img  class="CheckBoxImages" src="images/RallyPoint_Legend.png" alt="Rally"></img></input></div>
+				<div class="break"></div>
+			</div>
+	</div>
+	<!--------------------------------------ACCORDION SECTION END--------------------------------------------------->	
+</nav>
+
+<!---------------------------------------------------------------------–––––––––––––------–––––––––––––––––––––––––––––––––>
+<!------------------------------------------------------ End of Menus ––––––––––––––––––––––––––––––––––––––––––––––––––---> 
+<!---------------------------------------------------------------------–––––––––––––------–––––––––––––––––––––––––––––––––>
+
+<!----------- Start of Campus Map Header ----------->
+<div class="topbar">
+
+	<!-- Humboldt State University Campus Map Logo -->
+	<div class="logo"><a href="https://www.humboldt.edu/"><img src="images/logo3.png" alt="logo" style="width: 460px; height: auto;"></a></div>
+	
+	<!-- Humboldt State University Campus Map Smaller Logo when screen is adjusted to a smaller frame size-->
+	<div class="smalllogo"><a href="https://www.humboldt.edu/"><img src="images/smalllogo.png" alt="logo" style="width: 50px; height: auto; vertical-align: middle;"></a></div>
+	
+	<!-- Menu and Close button for the Nav Bar -->
+	<div class="control"> 
+		<!-- Class "cbp-spmenu-open" gets applied to menu -->
+		<button id="showLeft" data-text-swap="&#x2715; Close Menu">&#x2630; Menu</button>                 <!-- This is called in ButtonChange_Toggle.js -->
+	</div>
+	
+</div>
+<!----------- End of Campus Map Header ----------->
+
+<!----------- Start of Campus Map Footer ----------->
+<div class="footer">
+	<div class="control-footer">
+		<button id="showBottom" data-text-swap="&#x2715; Close">&#x2630; Info | Give Feedback</button>    <!-- This is called in ButtonChange_Toggle.js -->
+	</div>
+</div>
+<!----------- End of Campus Map Footer ----------->
+
+<!-- This is where the JSON files are located, and inside the "JSON" file --> 
+<!-- ************************STILL IMPLEMENTING************************** -->
+	<script src="JSON/ResidenceHalls.js" type="text/javascript"></script>               <!-- These are the residence hall json files -->
+	<!-- <script src="JSON/Parking.js" type="text/javascript"></script> -->             <!-- These are the parking json files -->
+	<!-- <script src="JSON/Dining.js" type="text/javascript"></script> -->              <!-- These are the dining services json files -->
+	<!-- <script src="JSON/Accessibility.js" type="text/javascript"></script>  -->               <!-- These are the accessibility json files -->
+	<script src="JSON/Buses.js" type="text/javascript"></script>                        <!-- These are the bus stop and routes json files -->
+	<script src="JSON/ComputerLabs&Printing.js" type="text/javascript"></script>        <!-- These are the computer & printing kiosk json files -->
+	<!-- <script src="JSON/Recreation.js" type="text/javascript"></script> -->          <!-- These are the recreation json files -->
+	<!-- <script src="JSON/EmergencyServices.js" type="text/javascript"></script>   -->          <!-- These are the Emergency Services L.markers -->
+<!-------------- End of JSON files -------------> 
+
+<!--––––––––––––––––––––––––––––––––––––––––––––––––––-- Map and Map Functions ––––––––––––––––––––––––––––––––––––––––––––––––––-->
+	<!--*ORDER MATTERS (Leave as is)--> 
+	<script src="js/LayerStyles.js" type="text/javascript"></script>            <!-- This is where the styles of each layer is located -->
+	<script src="js/SchoolMap.js" type="text/javascript"></script>              <!-- This is where the json format variables for each layer are located  -->
+	<script src="js/HighlightBuildings.js" type="text/javascript"></script>     <!-- This produces the highlight feature for each building -->
+	<script src="js/SearchBarContent.js" type="text/javascript"></script>       <!-- This is where the search bar functionality is located -->
+
+<!-------------------------------------------------------------------BUTTON CHANGES––––––––––––––––––––––––––––––––––––––––––––––––––----------------->
+	<!-- Helper Function––––––––––––––––––––––––––––––––––––––––––––––––––--> 
+	<!-- Classie - class helper functions by @desandro https://github.com/desandro/classie --> 
+	<!-- Helps toggle the button onclick functions for ButtonChange_Toggle.js -->
+	<script src="js/classie.js"></script> 
+
+	<!-- Toggles the onClick functions for each of the slide menus above -->
+	<script src="js/ButtonChange_Toggle.js" type="text/javascript"></script>
+</body>
+</html>
