@@ -7,7 +7,7 @@
 .cbp-spmenu {
 	background-color: rgba(41, 84, 41, 0.9);
 	position: fixed;
-	height: 1400px;
+	height: 100%;
 	bottom: 0;
 }
 
@@ -22,13 +22,11 @@
 	z-index: 1;
 	bottom: 0;
 	display: block;
-/* 	overflow-y: scroll; */
 }
 .cbp-spmenu-left {
 	left: -380px;
 	height: 100%;  /*auto;*/
 	bottom: 0;
-/* 	overflow-y: scroll; */
 	overflow-x: hidden;
 }
 .cbp-spmenu-left.cbp-spmenu-open {
