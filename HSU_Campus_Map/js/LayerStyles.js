@@ -165,7 +165,7 @@ var DispenserIcon = L.icon({
 
 //DINING STYLES
 var diningIcon = L.icon({
-	iconUrl: 'images/Dining_Map.PNG',
+	iconUrl: 'images/Dining_Legend.png',
 	iconSize:     [18, 18], // size of the icon
 	iconAnchor:   [13, 13], // point of the icon which will correspond to marker's location
 	popupAnchor:  [0, -20], // point from which the popup should open relative to the iconAnchor
